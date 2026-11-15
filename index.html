@@ -60,6 +60,33 @@ details.mol summary .now{flex:1 1 100%;font-weight:400;font-size:13.5px;backgrou
 .bands{margin:0;padding:0;list-style:none}.bands li{padding:2px 7px;border-radius:5px;margin:1px 0}
 .bands li.on,.row .crrt.on{background:var(--hl);font-weight:600}.row .crrt{padding:2px 7px;border-radius:5px;display:block}
 .bands .r{font-family:var(--mono);font-size:12px;color:var(--soft);display:inline-block;min-width:92px}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.bugs-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;align-items:start}
+@media(max-width:820px){.bugs-g{grid-template-columns:1fr}}
+.bgrp{margin-bottom:10px}.bgrp-h{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--soft);font-weight:700;margin:0 0 5px}
+.bug{display:block;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:7px 10px;margin:0 0 4px;font-size:13.5px;font-family:var(--sans);color:var(--ink);cursor:pointer;line-height:1.3}
+.bug.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+#bugout{position:sticky;top:150px}@media(max-width:820px){#bugout{position:static}}
+.abx-l{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:4px 9px;margin:0 5px 5px 0;font-size:13px;font-family:var(--sans);cursor:pointer;background:var(--panel);color:var(--ink);text-align:left}
+.lv3 .abx-l{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:700}
+.lv2 .abx-l{background:var(--accent-bg);border-color:#b9d8cf}
+.lv1 .abx-l{background:var(--caution-bg);border-color:#e6cc9e}
+.bug-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--soft);margin:0 0 10px}
+.lg{display:inline-flex;align-items:center;gap:6px}.sw{display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:4px;border:1px solid var(--line);font-size:13px}
+table.mx{min-width:0;width:auto;font-size:12.5px;border-collapse:separate;border-spacing:0}
+table.mx th,table.mx td{padding:0;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:center}
+table.mx td{width:27px;min-width:27px;height:28px;font-size:13px}
+table.mx th.ah{height:104px;vertical-align:bottom;background:var(--bg);text-transform:none;position:sticky;top:0;z-index:2}
+table.mx th.ah span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--sans);font-size:11.5px;font-weight:600;color:var(--ink);padding:5px 0;white-space:nowrap}
+table.mx .bn{position:sticky;left:0;z-index:3;background:var(--panel);text-align:left;min-width:190px;max-width:230px;width:230px;padding:3px 8px;font-size:12.5px}
+table.mx thead .bn{z-index:4;background:var(--bg);vertical-align:bottom;padding-bottom:6px;top:0}
+table.mx tr.gh td{background:var(--bg);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;font-weight:700;color:var(--soft);height:22px}
+table.mx tr.sel .bn{background:var(--hl)}table.mx tr.sel td{box-shadow:inset 0 2px 0 var(--accent),inset 0 -2px 0 var(--accent)}
+.bug-t{background:none;border:none;padding:0;font:inherit;color:var(--ink);cursor:pointer;text-align:left;line-height:1.25}
+.c3{background:var(--ok);color:#fff}.c2{background:#bfe0c4;color:#1c4a26}.c1{background:var(--caution-bg);color:var(--caution)}.c0{background:var(--panel);color:#b4b9c4}
+.mx-wrap{max-height:78vh;overflow:auto}
+@media(max-width:600px){table.mx .bn{min-width:132px;max-width:150px;width:150px;font-size:11.5px}}
+@media print{#bugout{position:static}.mx-wrap{max-height:none;overflow:visible}}
 footer{max-width:1040px;margin:28px auto 0;padding:14px 20px 0;border-top:1px solid var(--line);color:var(--soft);font-size:12px}
 @media print{header.top{position:static}nav.tabs,.bar a{display:none}}
 </style>
@@ -78,6 +105,7 @@ footer{max-width:1040px;margin:28px auto 0;padding:14px 20px 0;border-top:1px so
   <button data-view="home" class="active">Panoramica</button>
   <button data-view="calc">Clearance creatinina</button>
   <button data-view="mol">Classi e molecole</button>
+  <button data-view="bugs">Batteri e sensibilità</button>
   <button data-view="pkpd">PK/PD</button>
   <button data-view="crrt">Rene e CRRT</button>
   <button data-view="refs">Fonti</button>
@@ -91,7 +119,8 @@ footer{max-width:1040px;margin:28px auto 0;padding:14px 20px 0;border-top:1px so
   <div class="card"><p><strong>Come si usa</strong></p><ol>
     <li>Inserisci la clearance della creatinina nella barra in alto, o calcolala nella scheda <strong>Clearance creatinina</strong>.</li>
     <li>In <strong>Classi e molecole</strong> ogni scheda evidenzia in giallo la fascia renale corrispondente. Con «Paziente in CRRT» viene evidenziata la dose in CRRT.</li>
-    <li>Usa la ricerca per nome o germe (per esempio «MRSA», «Pseudomonas», «KPC»).</li></ol></div>
+    <li>Usa la ricerca per nome o germe (per esempio «MRSA», «Pseudomonas», «KPC»).</li>
+    <li>In <strong>Batteri e sensibilità</strong> seleziona il germe isolato (o più germi) per vedere gli antibiotici attivi in ordine di preferenza, poi tocca il farmaco per aprirne la scheda.</li></ol></div>
   <div id="home-stats" class="card"></div>
   <div class="callout avoid"><span class="lbl">Prima di prescrivere</span><ul>
     <li>Le dosi sono indicative e vanno confrontate con il Riassunto delle Caratteristiche del Prodotto, i protocolli locali e, quando disponibile, la consulenza infettivologica.</li>
@@ -133,6 +162,23 @@ footer{max-width:1040px;margin:28px auto 0;padding:14px 20px 0;border-top:1px so
   <div class="chips" id="chips"></div>
   <div id="list"></div>
   <p class="note" id="nores" hidden>Nessun risultato.</p>
+</section>
+
+<section class="view" id="view-bugs">
+  <h2>Batteri e sensibilità</h2>
+  <p class="lead">Dal germe alla terapia: seleziona uno o più batteri per vedere gli antibiotici attivi in ordine di preferenza, oppure consulta la tabella completa.</p>
+  <div class="callout caution"><span class="lbl">Orientamento empirico</span>Indica la sensibilità attesa della specie e la terapia abituale: non sostituisce l'antibiogramma, l'epidemiologia locale e la sede di infezione (penetrazione nel sito, es. liquor, polmone, vie urinarie). Lo stato di verifica sulle fonti è indicato nella scheda di ogni germe.</div>
+  <input type="search" id="bq" placeholder="Cerca germe (es. Klebsiella, MRSA, Bacteroides)…" autocomplete="off" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-size:14.5px;font-family:var(--sans);color:var(--ink)">
+  <div class="chips" id="bgchips"></div>
+  <div class="bugs-g">
+    <div class="card" style="margin-bottom:0"><div id="buglist"></div><button type="button" class="chip" id="bclear" hidden>Azzera selezione</button></div>
+    <div class="card" id="bugout" style="margin-bottom:0"></div>
+  </div>
+  <h3>Tabella completa germi / antibiotici</h3>
+  <div class="bug-legend" id="bug-legend"></div>
+  <div class="tbl-wrap mx-wrap"><table class="mx" id="bugmatrix"></table></div>
+  <p class="note">Tocca il nome di un germe nella tabella per selezionarlo. Le colonne meropenem/vaborbactam e imipenem/relebactam riportano l'attività del carbapenemico quando l'inibitore non aggiunge spettro.</p>
+  <div class="card"><p><strong>Fonti consultate</strong></p><ul><li>IDSA 2024, Guidance on the Treatment of Antimicrobial-Resistant Gram-Negative Infections (ESBL, AmpC, KPC, OXA-48, metallo-beta-lattamasi, Pseudomonas DTR, CRAB, Stenotrophomonas).</li><li>ESC 2023, Guidelines for the management of endocarditis (stafilococchi, streptococchi, enterococchi).</li><li>EUCAST, Expected Resistant Phenotypes v1.1-1.2 (resistenze intrinseche).</li><li>ESCMID 2021 e IDSA/SHEA 2021 (Clostridioides difficile).</li><li>ATS/IDSA 2019, polmonite acquisita in comunità; CDC 2021, infezioni sessualmente trasmesse.</li><li>Manuale MSD (Merck Manual), edizione professionale: schede dei singoli germi e tabella della meningite batterica.</li><li>Milosavljevic MN, et al. Antimicrobial treatment of Corynebacterium striatum invasive infections: a systematic review. Rev Inst Med Trop São Paulo. 2021;63:e49.</li></ul><p id="bug-stats" class="note"></p></div>
 </section>
 
 <section class="view" id="view-pkpd">
@@ -449,6 +495,231 @@ document.getElementById("chips").addEventListener("click",function(e){const b=e.
 document.getElementById("pk-body").innerHTML=CLASSES.map(function(c){return '<tr><td class="hi">'+esc(c.n)+'</td><td>'+esc(c.kill)+'</td><td>'+esc(c.idx)+'</td><td>'+esc(c.act)+'</td><td>'+esc(c.sol)+'</td><td>'+esc(c.elim)+'</td></tr>';}).join("");
 (function(){let n=0;CLASSES.forEach(function(c){n+=c.m.length;});let nv=0,np=0;Object.keys(VER).forEach(function(k){if(VER[k][0]==="v")nv++;else np++;});document.getElementById("home-stats").innerHTML='<p><strong>Contenuto</strong>: '+CLASSES.length+' classi e '+n+' molecole. Stato di verifica delle dosi: '+nv+' verificate, '+np+' parziali, '+(n-nv-np)+' non verificate (indicato in ogni scheda).</p><p>'+CLASSES.map(function(c){return esc(c.n)+' ('+c.m.length+')';}).join(" · ")+'</p>';})();
 cg();render();
+
+/* ===== BATTERI E SENSIBILITÀ ===== */
+/* Colonne: chiave, etichetta breve, nome esteso, termine di ricerca nelle schede molecola */
+const ABX=[
+["pen","Pen G","Benzilpenicillina","Benzilpenicillina"],
+["amx","Amoxi/Ampi","Amoxicillina, ampicillina","Ampicillina"],
+["oxa","Oxa","Oxacillina, flucloxacillina","Oxacillina"],
+["amc","Amoxi/clav","Amoxicillina/acido clavulanico","Amoxicillina/acido clavulanico"],
+["sam","Ampi/sulb","Ampicillina/sulbactam","Ampicillina/sulbactam"],
+["ptz","Pip/tazo","Piperacillina/tazobactam","Piperacillina/tazobactam"],
+["cfz","Cefazolina","Cefazolina","Cefazolina"],
+["cxm","Cefuroxima","Cefuroxima","Cefuroxima"],
+["cro","Ceftriaxone","Ceftriaxone, cefotaxime","Ceftriaxone"],
+["caz","Ceftazidime","Ceftazidime","Ceftazidime (III gen.)"],
+["fep","Cefepime","Cefepime","Cefepime"],
+["cpt","Ceftarolina","Ceftarolina, ceftobiprolo","Ceftarolina"],
+["ct","Ceftol/tazo","Ceftolozano/tazobactam","Ceftolozano/tazobactam"],
+["cza","Ceftaz/avi","Ceftazidime/avibactam","Ceftazidime/avibactam"],
+["fdc","Cefiderocol","Cefiderocol","Cefiderocol"],
+["etp","Ertapenem","Ertapenem","Ertapenem"],
+["mem","Meropenem","Meropenem, imipenem","Meropenem"],
+["mvb","Mero/vabor","Meropenem/vaborbactam","Meropenem/vaborbactam"],
+["imr","Imi/rele","Imipenem/cilastatina/relebactam","Imipenem/cilastatina/relebactam"],
+["atm","Aztreonam","Aztreonam","Aztreonam"],
+["aza","Aztr/avi","Aztreonam/avibactam","Aztreonam/avibactam"],
+["van","Vanco/Teico","Vancomicina, teicoplanina","Vancomicina"],
+["dap","Daptomicina","Daptomicina","Daptomicina"],
+["lzd","Linezolid","Linezolid, tedizolid","Linezolid"],
+["amg","Aminoglic.","Gentamicina, amikacina, tobramicina","Aminoglicosidi"],
+["cip","Ciproflox.","Ciprofloxacina","Ciprofloxacina"],
+["lvx","Levoflox.","Levofloxacina","Levofloxacina"],
+["mxf","Moxiflox.","Moxifloxacina","Moxifloxacina"],
+["mac","Macrolidi","Azitromicina, claritromicina","Macrolidi"],
+["cli","Clindamicina","Clindamicina","Clindamicina"],
+["dox","Doxi/Mino","Doxiciclina, minociclina","Doxiciclina"],
+["tgc","Tigeciclina","Tigeciclina, eravaciclina","Tigeciclina"],
+["col","Colistina","Colistina","Colistina"],
+["sxt","Cotrimox.","Cotrimoxazolo","Cotrimoxazolo"],
+["mtz","Metronid.","Metronidazolo","Metronidazolo"],
+["fos","Fosfo EV","Fosfomicina disodica (EV)","Fosfomicina disodica"]
+];
+const BGROUPS=[["gp","Gram-positivi aerobi"],["gn","Gram-negativi aerobi"],["mdr","Gram-negativi multiresistenti"],["an","Anaerobi"],["at","Atipici"]];
+/* f = prima scelta (3); a = attivo, alternativa (2); v = attività variabile, solo con antibiogramma o in associazione (1); il resto = non attivo o non indicato (0).
+   Se non specificati: mvb e imr ereditano da mem (max 2), sam eredita da amc. */
+function B(g,n,f,a,v,first,note){return {g:g,n:n,f:f,a:a,v:v,first:first,note:note||""};}
+const BUGS=[
+B("gp","Staphylococcus aureus meticillino-sensibile (MSSA)","oxa cfz","amc ptz cxm fep cpt etp mem van dap lzd sxt tgc fos","cro cli dox mac lvx mxf amg",
+ "Oxacillina o flucloxacillina; cefazolina.","La maggior parte dei ceppi produce penicillinasi: penicillina G e amoxicillina non attive. I beta-lattamici anti-stafilococcici sono superiori alla vancomicina. Aminoglicosidi solo in sinergia."),
+B("gp","Staphylococcus aureus meticillino-resistente (MRSA)","van dap lzd","cpt tgc sxt","cli dox fos amg lvx mxf",
+ "Vancomicina o daptomicina (batteriemia, endocardite); linezolid (polmonite, cute).","Daptomicina inattivata dal surfattante: non usare nella polmonite. Ceftarolina e ceftobiprolo sono gli unici beta-lattamici attivi. Alternative: dalbavancina, oritavancina, tedizolid."),
+B("gp","Stafilococchi coagulasi-negativi (S. epidermidis e altri)","van","dap lzd tgc","oxa cfz cpt sxt dox fos",
+ "Vancomicina (la maggior parte dei ceppi nosocomiali è meticillino-resistente).","Se meticillino-sensibile: oxacillina o cefazolina. S. haemolyticus può essere resistente alla teicoplanina. Valutare sempre il significato clinico (contaminante o infezione di dispositivo)."),
+B("gp","Streptococchi beta-emolitici (S. pyogenes, S. agalactiae)","pen amx","oxa amc ptz cfz cxm cro fep cpt etp mem van dap lzd lvx mxf tgc","mac cli dox sxt ct fos",
+ "Penicillina G o amoxicillina.","Nessuna resistenza alla penicillina descritta in S. pyogenes. Nella fascite necrotizzante e nello shock tossico aggiungere clindamicina (effetto antitossina). Resistenza ai macrolidi e alla clindamicina variabile."),
+B("gp","Streptococchi viridanti e gruppo anginosus","pen amx cro","amc ptz fep cpt etp mem van dap lzd tgc","cfz cxm lvx mxf cli mac",
+ "Penicillina G, amoxicillina o ceftriaxone.","MIC della penicillina variabile: nell'endocardite da ceppi meno sensibili associare gentamicina per 2 settimane. Vancomicina nell'allergico ai beta-lattamici. Il gruppo anginosus forma ascessi (drenaggio)."),
+B("gp","Streptococcus pneumoniae","pen amx cro","amc ptz fep cpt etp mem van lzd lvx mxf tgc","oxa cfz cxm mac cli dox sxt",
+ "Amoxicillina o penicillina G (ceppi sensibili); ceftriaxone nelle forme gravi e nella meningite.","Meningite: ceftriaxone ad alte dosi, con vancomicina finché non è nota la sensibilità. Daptomicina non utilizzabile nella polmonite. Resistenza ai macrolidi frequente in Italia."),
+B("gp","Enterococcus faecalis","amx","pen amc ptz van lzd dap tgc","mem cpt amg lvx mxf fos",
+ "Ampicillina o amoxicillina.","Resistenza intrinseca alle cefalosporine, alla clindamicina e al cotrimoxazolo. Endocardite: ampicillina + ceftriaxone, oppure ampicillina + gentamicina (sinergia). Tra i carbapenemi è attivo l'imipenem, non l'ertapenem."),
+B("gp","Enterococcus faecium (sensibile alla vancomicina)","van","lzd dap tgc","amx fos dox",
+ "Vancomicina o teicoplanina.","La maggior parte dei ceppi è resistente all'ampicillina. Daptomicina ad alte dosi (10-12 mg/kg)."),
+B("gp","Enterococchi resistenti alla vancomicina (VRE)","lzd dap","tgc","fos dox",
+ "Linezolid; daptomicina ad alte dosi (10-12 mg/kg) nelle batteriemie e nell'endocardite.","Endocardite (ESC 2023): daptomicina 10-12 mg/kg associata ad ampicillina, ertapenem, ceftarolina o fosfomicina; linezolid come alternativa. La teicoplanina resta attiva sui ceppi VanB."),
+B("gp","Listeria monocytogenes","amx","pen sxt mem","van lzd amg lvx mxf",
+ "Ampicillina ad alte dosi, con o senza gentamicina.","Resistenza intrinseca a tutte le cefalosporine. Cotrimoxazolo nell'allergico alla penicillina."),
+B("gp","Corynebacterium spp. (C. jeikeium, C. striatum)","van","lzd","dap tgc amc",
+ "Vancomicina (o teicoplanina).","Spesso multiresistenti: resistenza elevata a penicillina, chinoloni, macrolidi, clindamicina, tetracicline, aminoglicosidi e cotrimoxazolo. Linezolid sempre attivo nelle casistiche; daptomicina alternativa, ma C. striatum può sviluppare resistenza ad alto livello durante la terapia. Amoxicillina/clavulanato solo nelle forme lievi con antibiogramma. Valutare il significato clinico (contaminante cutaneo)."),
+B("gp","Nocardia spp.","sxt","lzd","cro mem amg mxf dox tgc",
+ "Cotrimoxazolo ad alte dosi.","Nelle forme disseminate o nell'immunodepresso associare amikacina, imipenem o meropenem in attesa di identificazione di specie e antibiogramma. Alternative secondo antibiogramma: minociclina, ceftriaxone, moxifloxacina, linezolid (in associazione), tigeciclina. Terapia di molti mesi."),
+B("gn","Neisseria meningitidis","cro pen","amx fep mem etp cip lvx mxf","",
+ "Ceftriaxone (penicillina G se il ceppo è sensibile).","Profilassi dei contatti: ciprofloxacina, rifampicina o ceftriaxone."),
+B("gn","Neisseria gonorrhoeae","cro","","mac amg",
+ "Ceftriaxone IM in dose singola (CDC 2021: 500 mg; 1 g se peso ≥150 kg).","Allergia alle cefalosporine: gentamicina 240 mg IM + azitromicina 2 g in dose singola. Chinoloni non più utilizzabili per resistenza. Trattare anche Chlamydia se non esclusa (doxiciclina)."),
+B("gn","Moraxella catarrhalis","amc","cxm cro caz fep cpt ptz etp mem mac cip lvx mxf dox sxt tgc amg","cfz",
+ "Amoxicillina/acido clavulanico.","Quasi tutti i ceppi producono beta-lattamasi: amoxicillina da sola non affidabile. Sensibile anche a cefalosporine di II-III generazione, macrolidi, chinoloni, tetracicline."),
+B("gn","Haemophilus influenzae","amc cro","cxm caz fep cpt ptz etp mem atm cip lvx mxf tgc mac","amx sxt dox",
+ "Ceftriaxone o cefotaxime nelle forme invasive (meningite compresa); amoxicillina/acido clavulanico nelle forme non gravi.","Amoxicillina da sola attiva solo sui ceppi non produttori di beta-lattamasi. Cefalosporine di I generazione non attive. Alternative orali: cefalosporine di II-III generazione, azitromicina, chinoloni."),
+B("gn","Escherichia coli (non ESBL)","cro","ptz cxm caz fep etp mem ct cza fdc atm aza amg fos tgc col","amx amc cfz cip lvx mxf sxt dox",
+ "Ceftriaxone o cefotaxime; restringere sull'antibiogramma (anche ad amoxicillina o cefazolina se sensibile).","In Italia resistenza elevata ad amoxicillina, amoxicillina/clavulanato, chinoloni e cotrimoxazolo: usarli solo con antibiogramma. Carbapenemi e nuovi beta-lattamici attivi ma da risparmiare."),
+B("gn","Klebsiella pneumoniae e K. oxytoca (non ESBL)","cro","ptz cxm caz fep etp mem ct cza fdc atm aza amg tgc col","amc cfz cip lvx sxt fos",
+ "Ceftriaxone o cefotaxime; restringere sull'antibiogramma.","Resistenza intrinseca ad ampicillina e amoxicillina."),
+B("gn","Proteus mirabilis","cro","amc ptz cxm caz fep etp mem ct cza fdc atm aza amg","amx cfz cip lvx sxt fos",
+ "Ceftriaxone; ampicillina se sensibile.","Resistenza intrinseca a colistina, tigeciclina, tetracicline e nitrofurantoina. MIC dell'imipenem più elevate: preferire meropenem o ertapenem."),
+B("gn","Salmonella spp.","cro","fep etp mem mac","amx cip lvx sxt",
+ "Ceftriaxone nelle forme sistemiche; azitromicina o ciprofloxacina per os se sensibile.","La gastroenterite non complicata non va trattata (l'antibiotico prolunga l'escrezione); trattare pazienti ad alto rischio e forme sistemiche o focali. Resistenza in aumento: serve l'antibiogramma. Cefalosporine di I-II generazione e aminoglicosidi inefficaci in vivo anche se sensibili in vitro."),
+B("gn","Campylobacter spp.","mac","mem","amx cip amg",
+ "Azitromicina (solo forme che non si risolvono o pazienti ad alto rischio, es. immunodepressi).","Ciprofloxacina solo con sensibilità documentata: resistenza in aumento, anche in corso di terapia. Infezioni sistemiche o extraintestinali: imipenem, gentamicina, ampicillina o eritromicina per 2-4 settimane."),
+B("gn","Enterobacterales gruppo AmpC (Enterobacter cloacae, Klebsiella aerogenes, Citrobacter freundii; Serratia, Morganella, Providencia)","fep","mem etp cza fdc aza amg cip lvx sxt","ptz cro caz atm tgc fos col",
+ "Cefepime; carbapenemi nelle forme gravi o se MIC di cefepime elevata.","Resistenza intrinseca ad ampicillina, amoxicillina/clavulanato e cefalosporine di I generazione. E. cloacae, K. aerogenes e C. freundii (rischio moderato di derepressione di AmpC, circa 20%): evitare ceftriaxone, cefotaxime e ceftazidime nelle infezioni invasive; piperacillina/tazobactam e ceftolozano/tazobactam non raccomandati. Serratia, Morganella e Providencia (rischio basso): scegliere sull'antibiogramma, ceftriaxone utilizzabile se sensibile; sono intrinsecamente resistenti alla colistina. Chinoloni e cotrimoxazolo, se sensibili, per vie urinarie e terapia orale di prosecuzione."),
+B("gn","Pseudomonas aeruginosa (sensibile)","ptz fep caz","mem ct cza fdc atm amg cip lvx col","fos aza",
+ "Piperacillina/tazobactam, ceftazidime o cefepime, in infusione estesa nei casi gravi.","Resistenza intrinseca a ertapenem, ceftriaxone, amoxicillina/clavulanato, tigeciclina e cotrimoxazolo. Aminoglicosidi e fosfomicina solo in associazione (eccetto infezioni urinarie). Risparmiare carbapenemi e nuovi beta-lattamici."),
+B("mdr","Enterobacterales produttori di ESBL","mem etp","mvb imr cza ct fdc aza","ptz amg tgc cip lvx sxt col fos",
+ "Meropenem, imipenem o ertapenem (meropenem o imipenem nel paziente critico o con ipoalbuminemia).","Piperacillina/tazobactam e cefepime non raccomandati fuori dalle vie urinarie, anche se sensibili in vitro. Chinoloni e cotrimoxazolo, se sensibili: scelta nella pielonefrite e nel passaggio alla terapia orale. Cistite: nitrofurantoina o cotrimoxazolo; fosfomicina orale solo per E. coli. Nuovi beta-lattamici attivi ma da riservare ai ceppi resistenti ai carbapenemi."),
+B("mdr","Enterobacterales produttori di KPC","mvb cza imr","fdc aza","col tgc amg fos",
+ "Meropenem/vaborbactam, ceftazidime/avibactam o imipenem/relebactam (ordine di preferenza IDSA).","Ceftazidime/avibactam ha il rischio più alto di comparsa di resistenza (mutazioni di KPC). Cefiderocol come alternativa. Tigeciclina solo per infezioni non ematiche e non urinarie; aminoglicosidi nelle vie urinarie. IDSA non suggerisce le polimixine; colistina e fosfomicina solo se non ci sono altre opzioni, in associazione."),
+B("mdr","Enterobacterales produttori di OXA-48","cza","fdc aza","atm col tgc amg fos",
+ "Ceftazidime/avibactam.","Cefiderocol come alternativa. Meropenem/vaborbactam e imipenem/relebactam non suggeriti anche se sensibili in vitro: vaborbactam e relebactam non inibiscono OXA-48. Tigeciclina solo per infezioni non ematiche e non urinarie. Aztreonam non idrolizzato da OXA-48 ma spesso inattivo per ESBL associate. IDSA non suggerisce le polimixine."),
+B("mdr","Enterobacterales produttori di metallo-beta-lattamasi (NDM, VIM)","aza fdc","","col tgc amg fos",
+ "Ceftazidime/avibactam + aztreonam (o aztreonam/avibactam), oppure cefiderocol.","Ceftazidime/avibactam, meropenem/vaborbactam e imipenem/relebactam da soli non attivi. Cefiderocol: MIC più alte sui ceppi NDM, verificare la sensibilità. Tigeciclina solo per infezioni non ematiche e non urinarie. IDSA non suggerisce le polimixine."),
+B("mdr","Pseudomonas aeruginosa DTR (difficile da trattare)","ct cza imr","fdc","col amg",
+ "Ceftolozano/tazobactam, ceftazidime/avibactam o imipenem/relebactam, secondo antibiogramma.","Cefiderocol come alternativa, e prima scelta nei ceppi produttori di metallo-beta-lattamasi. Meropenem/vaborbactam non aggiunge attività rispetto al meropenem. Tobramicina o amikacina nelle infezioni urinarie, o in associazione come ultima risorsa; colistina solo nella cistite o in associazione. Terapia di associazione non necessaria se un beta-lattamico è attivo."),
+B("mdr","Acinetobacter baumannii resistente ai carbapenemi (CRAB)","sam","","col dox tgc fdc",
+ "Ampicillina/sulbactam ad alte dosi (9 g/die di sulbactam) associata ad almeno un altro farmaco attivo. Sulbactam/durlobactam + carbapenemico se disponibile.","Sempre terapia di associazione, almeno fino alla risposta clinica. Secondo farmaco: colistina (o polimixina B), minociclina (preferita alla tigeciclina) o cefiderocol; cefiderocol solo in associazione e nei casi refrattari. Meropenem, fosfomicina e rifampicina non suggeriti. Resistenza intrinseca a ertapenem e aztreonam. Ceppi sensibili ai carbapenemi: meropenem o ampicillina/sulbactam."),
+B("mdr","Stenotrophomonas maltophilia","fdc dox sxt","lvx aza","tgc",
+ "Associazione di due farmaci tra cefiderocol, minociclina, cotrimoxazolo e levofloxacina (ordine di preferenza IDSA); in alternativa ceftazidime/avibactam + aztreonam (o aztreonam/avibactam).","Associazione almeno fino al miglioramento clinico. Resistenza intrinseca ai carbapenemi e agli aminoglicosidi. La ceftazidime non è più considerata efficace. Nella colonna Doxi/Mino il farmaco di riferimento è la minociclina."),
+B("an","Bacteroides fragilis e gruppo","mtz","amc ptz etp mem tgc","cli mxf",
+ "Metronidazolo; piperacillina/tazobactam o amoxicillina/clavulanato nelle infezioni miste.","Produce beta-lattamasi: penicillina e cefalosporine non attive. Resistenza a clindamicina e moxifloxacina frequente."),
+B("an","Prevotella, Fusobacterium e altri anaerobi Gram-negativi","mtz amc","ptz etp mem tgc cli","pen amx mxf cro",
+ "Amoxicillina/acido clavulanico (o altro beta-lattamico con inibitore) o metronidazolo; clindamicina come alternativa.","Gli anaerobi orofaringei possono non rispondere alla penicillina (beta-lattamasi). Nelle infezioni miste associare al metronidazolo un farmaco attivo sugli aerobi."),
+B("an","Anaerobi Gram-positivi (Peptostreptococcus, Actinomyces, Cutibacterium)","pen amx","amc ptz etp mem cli van lzd tgc","mtz cro mxf dox mac",
+ "Penicillina G o amoxicillina.","Actinomicosi: penicillina G EV ad alte dosi, poi penicillina o amoxicillina orale, per almeno 8 settimane e spesso molti mesi; alternative doxiciclina, minociclina, clindamicina, eritromicina, ceftriaxone, linezolid. Actinomyces e Cutibacterium sono resistenti al metronidazolo."),
+B("an","Clostridium perfringens e altri clostridi","pen","amx amc ptz etp mem mtz van lzd tgc","cli cro",
+ "Penicillina G ad alte dosi + clindamicina.","Mionecrosi (gangrena gassosa): chirurgia urgente; la clindamicina blocca la sintesi di tossine ma da sola non basta. Allergia alla penicillina: clindamicina + metronidazolo. Ossigeno iperbarico come complemento, senza ritardare la chirurgia."),
+B("an","Clostridioides difficile","van","","mtz tgc",
+ "Fidaxomicina orale 200 mg ogni 12 h per 10 giorni; in alternativa vancomicina orale 125 mg ogni 6 h per 10 giorni.","La vancomicina è efficace solo per via orale, per sondino o rettale. Metronidazolo orale solo se fidaxomicina e vancomicina non sono disponibili, mai nelle forme gravi. Forme fulminanti: vancomicina orale fino a 500 mg ogni 6 h (anche rettale se ileo) + metronidazolo EV (IDSA), oppure aggiunta di tigeciclina EV (ESCMID); valutazione chirurgica. Sospendere, se possibile, l'antibiotico scatenante."),
+B("at","Legionella pneumophila","lvx mxf mac","","cip dox",
+ "Levofloxacina o moxifloxacina; azitromicina.","Germe intracellulare: beta-lattamici e aminoglicosidi non efficaci. Tra i macrolidi preferire l'azitromicina (claritromicina ed eritromicina meno efficaci). Doxiciclina solo nelle forme lievi dell'immunocompetente. Aggiunta di rifampicina non raccomandata."),
+B("at","Mycoplasma pneumoniae","mac dox","lvx mxf","cip tgc",
+ "Azitromicina o doxiciclina.","Privo di parete: tutti i beta-lattamici e i glicopeptidi sono inattivi. Resistenza ai macrolidi in aumento."),
+B("at","Chlamydia e Chlamydophila (C. pneumoniae, C. psittaci, C. trachomatis)","dox mac","lvx mxf","cip",
+ "Doxiciclina; azitromicina come alternativa.","Germi intracellulari obbligati: beta-lattamici non efficaci. C. trachomatis (CDC 2021): doxiciclina 100 mg ogni 12 h per 7 giorni preferita all'azitromicina 1 g in dose singola; levofloxacina alternativa."),
+];
+BUGS.forEach(function(b){
+  const L={};ABX.forEach(function(a){L[a[0]]=0;});
+  [[b.v,1],[b.a,2],[b.f,3]].forEach(function(p){p[0].split(" ").forEach(function(k){if(!k)return;if(!(k in L))throw new Error("chiave antibiotico sconosciuta: "+k+" in "+b.n);L[k]=p[1];});});
+  const all=" "+b.f+" "+b.a+" "+b.v+" ";
+  ["mvb","imr"].forEach(function(k){if(all.indexOf(" "+k+" ")<0)L[k]=Math.min(L.mem,2);});
+  if(all.indexOf(" sam ")<0)L.sam=Math.min(L.amc,2);
+  b.L=L;
+});
+/* Stato di verifica: v = terapia di scelta e alternative confrontate con la fonte; p = verifica parziale */
+const BVER=[
+["meticillino-sensibile","v","ESC 2023 endocardite (oxacillina/flucloxacillina o cefazolina; aminoglicoside non più raccomandato su valvola nativa)"],
+["meticillino-resistente","v","ESC 2023 endocardite (vancomicina; daptomicina 10 mg/kg in associazione). Indicazione del linezolid non riletta"],
+["coagulasi-negativi","p","ESC 2023 per i ceppi meticillino-resistenti; alternative non rilette"],
+["beta-emolitici","p","ESC 2023 (sensibilità uniforme ai beta-lattamici); EUCAST per ceftazidime e aminoglicosidi. Alternative non rilette"],
+["viridanti","v","ESC 2023 endocardite (penicillina G, amoxicillina o ceftriaxone; vancomicina nell'allergico)"],
+["Streptococcus pneumoniae","p","ESC 2023 (ceftriaxone, con o senza vancomicina, nella meningite); EUCAST per ceftazidime. Alternative non rilette"],
+["Enterococcus faecalis","v","ESC 2023 endocardite (ampicillina + ceftriaxone o + gentamicina); EUCAST per cefalosporine, clindamicina e sulfamidici"],
+["Enterococcus faecium","v","ESC 2023 endocardite (vancomicina + gentamicina); EUCAST per le cefalosporine"],
+["VRE","v","ESC 2023 endocardite (daptomicina 10-12 mg/kg in associazione; linezolid alternativa)"],
+["Listeria","v","Manuale MSD, meningite (ampicillina o penicillina G; cotrimoxazolo nell'allergico); EUCAST per le cefalosporine"],
+["Klebsiella pneumoniae e","p","EUCAST per la resistenza ad ampicillina/amoxicillina; resto non riletto"],
+["Proteus","p","EUCAST per tetracicline, tigeciclina, colistina e nitrofurantoina; resto non riletto"],
+["gruppo AmpC","v","IDSA 2024 (cefepime; rischio per specie); EUCAST per le resistenze intrinseche a penicilline e inibitori"],
+["produttori di ESBL","v","IDSA 2024"],["KPC","v","IDSA 2024 (aztreonam/avibactam non trattato dalla guida)"],["OXA-48","v","IDSA 2024 (aztreonam/avibactam non trattato dalla guida)"],
+["metallo-beta","v","IDSA 2024"],["DTR","v","IDSA 2024"],["CRAB","v","IDSA 2024"],
+["Stenotrophomonas","v","IDSA 2024; EUCAST per aminoglicosidi e tetracicline"],
+["Clostridioides","v","ESCMID 2021 e IDSA/SHEA 2021"],
+["Corynebacterium","v","Revisione sistematica su C. striatum (Rev Inst Med Trop São Paulo 2021); tigeciclina non trattata"],
+["Nocardia","v","Manuale MSD, nocardiosi"],
+["meningitidis","p","Manuale MSD, meningite (ceftriaxone o cefotaxime; penicillina G se sensibile). Alternative e profilassi non rilette"],
+["gonorrhoeae","v","CDC 2021, linee guida sulle infezioni sessualmente trasmesse"],
+["Moraxella","v","Manuale MSD (beta-lattamasi e classi attive); nuovi beta-lattamici non trattati"],
+["Haemophilus","v","Manuale MSD, infezioni da Haemophilus e meningite"],
+["Escherichia coli","p","Manuale MSD (resistenza frequente ad ampicillina, cotrimoxazolo e chinoloni; classi attive). Scelta del ceftriaxone come primo farmaco non riletta"],
+["Salmonella","v","Manuale MSD, salmonellosi non tifoidea; nota su cefalosporine I-II e aminoglicosidi non riletta"],
+["Campylobacter","v","Manuale MSD, infezioni da Campylobacter"],
+["aeruginosa (sensibile)","v","Manuale MSD e ATS/IDSA 2019 (beta-lattamici antipseudomonas, monoterapia); resistenze intrinseche non confermate cella per cella"],
+["Bacteroides","v","Manuale MSD, infezioni miste da anaerobi (la fonte considera attiva anche la moxifloxacina, qui lasciata come variabile)"],
+["Prevotella","v","Manuale MSD, infezioni miste da anaerobi"],
+["Anaerobi Gram-positivi","p","Manuale MSD, actinomicosi; resistenza al metronidazolo non riletta"],
+["perfringens","v","Manuale MSD, infezioni clostridiali dei tessuti molli"],
+["Legionella","v","Manuale MSD, infezioni da Legionella"],
+["Mycoplasma","v","Manuale MSD (beta-lattamici inefficaci; macrolide o doxiciclina; chinolone respiratorio)"],
+["Chlamydia e","v","CDC 2021 per C. trachomatis; Manuale MSD per la polmonite"]
+];
+BUGS.forEach(function(b){b.ver=null;BVER.forEach(function(v){if(b.n.indexOf(v[0])>=0)b.ver=v;});});
+const LV=[["0","–","Non attivo o non indicato"],["1","◐","Attività variabile: solo con antibiogramma o in associazione"],["2","●","Attivo (alternativa)"],["3","★","Prima scelta"]];
+let BSEL=[],BGRP="";
+function bugVisible(b,q){return (!BGRP||b.g===BGRP)&&(!q||b.n.toLowerCase().indexOf(q)>=0);}
+function abxLink(a){return '<button type="button" class="abx-l" data-q="'+esc(a[3])+'" title="Apri la scheda: '+esc(a[2])+'">'+esc(a[2])+'</button>';}
+function renderBugs(){
+  const q=document.getElementById("bq").value.trim().toLowerCase();
+  // elenco germi
+  let h="";
+  BGROUPS.forEach(function(g){
+    const bs=BUGS.filter(function(b){return b.g===g[0]&&bugVisible(b,q);});
+    if(!bs.length)return;
+    h+='<div class="bgrp"><div class="bgrp-h">'+esc(g[1])+'</div>'+bs.map(function(b){const i=BUGS.indexOf(b);return '<button type="button" class="bug'+(BSEL.indexOf(i)>=0?' on':'')+'" data-b="'+i+'" aria-pressed="'+(BSEL.indexOf(i)>=0)+'">'+esc(b.n)+'</button>';}).join("")+'</div>';
+  });
+  document.getElementById("buglist").innerHTML=h||'<p class="note">Nessun germe trovato.</p>';
+  // risultato
+  const out=document.getElementById("bugout");
+  if(!BSEL.length){out.innerHTML='<p class="note">Seleziona uno o più germi: compaiono gli antibiotici attivi, in ordine di preferenza. Con più germi selezionati vengono mostrati solo gli antibiotici che li coprono tutti.</p>';}
+  else{
+    const sel=BSEL.map(function(i){return BUGS[i];});
+    let r="";
+    if(sel.length===1){const b=sel[0];r+='<h3 style="margin-top:0">'+esc(b.n)+'</h3><div class="row"><b>Terapia di scelta</b><div>'+esc(b.first)+'</div></div>'+(b.note?'<div class="row"><b>Note</b><div>'+esc(b.note)+'</div></div>':'')+'<div class="row"><b>Verifica</b><div>'+(b.ver?'<span class="pill'+(b.ver[1]==="v"?'':' w')+'">'+(b.ver[1]==="v"?'Verificato':'Verifica parziale')+'</span> '+esc(b.ver[2])+'.':'<span class="pill a">Non verificato</span> Redatto a memoria: non confrontato con le fonti.')+'</div></div>';}
+    else r+='<h3 style="margin-top:0">Copertura comune a '+sel.length+' germi</h3><p class="note" style="margin-top:0">'+sel.map(function(b){return esc(b.n);}).join(" · ")+'</p>';
+    const lv=function(a){return Math.min.apply(null,sel.map(function(b){return b.L[a[0]];}));};
+    const names=sel.length===1?["Prima scelta","Attivi (alternative)","Attività variabile: solo con antibiogramma o in associazione"]:["Prima scelta per tutti i germi selezionati","Attivi su tutti","Coprono tutti, ma con attività variabile su almeno uno"];
+    [3,2,1].forEach(function(k,j){
+      const as=ABX.filter(function(a){return lv(a)===k;});
+      r+='<div class="row"><b>'+names[j]+'</b><div class="lv'+k+'">'+(as.length?as.map(abxLink).join(""):'<span class="note">Nessuno</span>')+'</div></div>';
+    });
+    if(sel.length>1&&!ABX.some(function(a){return lv(a)>=2;}))r+='<p class="note">Nessun antibiotico singolo copre in modo affidabile tutti i germi selezionati: serve un\'associazione.</p>';
+    r+='<p class="note">Tocca un antibiotico per aprire la scheda con dosi, funzione renale e CRRT.</p>';
+    out.innerHTML=r;
+  }
+  document.getElementById("bclear").hidden=!BSEL.length;
+  // matrice
+  const rows=BUGS.filter(function(b){return bugVisible(b,q);});
+  let t='<thead><tr><th class="bn">Germe</th>'+ABX.map(function(a){return '<th class="ah" title="'+esc(a[2])+'"><span>'+esc(a[1])+'</span></th>';}).join("")+'</tr></thead><tbody>';
+  let lastg="";
+  rows.forEach(function(b){
+    if(b.g!==lastg){lastg=b.g;t+='<tr class="gh"><td class="bn">'+esc(BGROUPS.filter(function(g){return g[0]===b.g;})[0][1])+'</td><td colspan="'+ABX.length+'"></td></tr>';}
+    const i=BUGS.indexOf(b);
+    t+='<tr'+(BSEL.indexOf(i)>=0?' class="sel"':'')+'><td class="bn"><button type="button" class="bug-t" data-b="'+i+'">'+esc(b.n)+'</button></td>'+ABX.map(function(a){const k=b.L[a[0]];return '<td class="c'+k+'" title="'+esc(a[2])+": "+LV[k][2]+'">'+LV[k][1]+'</td>';}).join("")+'</tr>';
+  });
+  document.getElementById("bugmatrix").innerHTML=t+'</tbody>';
+}
+function toggleBug(i){const p=BSEL.indexOf(i);if(p>=0)BSEL.splice(p,1);else BSEL.push(i);renderBugs();}
+document.getElementById("bgchips").innerHTML='<button type="button" class="chip on" data-g="">Tutti</button>'+BGROUPS.map(function(g){return '<button type="button" class="chip" data-g="'+g[0]+'">'+esc(g[1])+'</button>';}).join("");
+document.getElementById("bgchips").addEventListener("click",function(e){const b=e.target.closest("[data-g]");if(!b)return;BGRP=b.getAttribute("data-g");this.querySelectorAll(".chip").forEach(function(c){c.classList.toggle("on",c===b);});renderBugs();});
+document.getElementById("bq").addEventListener("input",renderBugs);
+document.getElementById("bclear").addEventListener("click",function(){BSEL=[];renderBugs();});
+document.getElementById("view-bugs").addEventListener("click",function(e){
+  const b=e.target.closest("[data-b]");if(b){toggleBug(parseInt(b.getAttribute("data-b"),10));if(b.classList.contains("bug-t"))document.getElementById("bugout").scrollIntoView({block:"center"});return;}
+  const a=e.target.closest(".abx-l");if(a){const q=document.getElementById("q");q.value=a.getAttribute("data-q");render();showView("mol");const d=document.querySelector("#list details.mol");if(d&&document.querySelectorAll("#list details.mol").length<=3)d.open=true;}
+});
+document.getElementById("bug-legend").innerHTML=LV.slice().reverse().map(function(l){return '<span class="lg"><span class="sw c'+l[0]+'">'+l[1]+'</span>'+esc(l[2])+'</span>';}).join("");
+renderBugs();
+(function(){let v=0,p=0;BUGS.forEach(function(b){if(b.ver){if(b.ver[1]==="v")v++;else p++;}});document.getElementById("bug-stats").textContent="Stato di verifica: "+v+" germi verificati, "+p+" parziali, "+(BUGS.length-v-p)+" non verificati (indicato nella scheda di ogni germe).";})();
 </script>
 </body>
 </html>
