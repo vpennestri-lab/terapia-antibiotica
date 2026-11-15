@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terapia Antibiotica</title>
+<style>
+:root{--bg:#f5f5f2;--panel:#fff;--ink:#1d2330;--soft:#505a6b;--line:#dcdfe6;--accent:#1f6b5c;--accent-bg:#e3f1ed;--ok:#2f6d3b;--ok-bg:#e7f0e6;--caution:#a3641c;--caution-bg:#f6ecdd;--avoid:#a5322c;--avoid-bg:#f7e7e5;--hl:#fff3c4;--radius:10px;
+--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:"SF Mono",Menlo,monospace;}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;padding-bottom:60px;-webkit-font-smoothing:antialiased}
+header.top{background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.top-inner{max-width:1040px;margin:0 auto;padding:14px 20px 0}
+.eyebrow{font-family:var(--mono);font-size:12px;color:var(--soft);margin:0 0 4px}
+h1.title{font-family:var(--serif);font-weight:600;font-size:clamp(20px,4.5vw,27px);margin:0 0 8px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;background:var(--accent-bg);border:1px solid #b9d8cf;border-radius:8px;padding:7px 12px;font-size:13.5px;margin-bottom:8px}
+.bar label{font-weight:600}.bar input[type=number]{width:74px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;font-size:14px;font-family:var(--sans)}
+.bar .chk{display:flex;align-items:center;gap:5px;font-weight:600}.bar a{color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto;background:none;border:none;border-bottom:3px solid transparent;padding:9px 11px 11px;font-family:var(--sans);font-size:13.5px;font-weight:600;color:var(--soft);cursor:pointer;white-space:nowrap}
+nav.tabs button.active{color:var(--ink);border-bottom-color:var(--accent)}
+main{max-width:1040px;margin:0 auto;padding:20px 20px 0}
+section.view{display:none}section.view.active{display:block}
+h2{font-family:var(--serif);font-size:21px;margin:0 0 6px}h3{font-family:var(--serif);font-size:17px;margin:22px 0 8px}
+p.lead{margin:0 0 14px;color:var(--soft);font-size:14.5px;max-width:760px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:15px 17px;margin-bottom:14px;font-size:14px}
+.card ul,.card ol{margin:6px 0 6px 20px;padding:0}.card li{margin:3px 0}.card p{margin:0 0 8px}
+.callout{border-radius:var(--radius);padding:13px 16px;margin-bottom:14px;font-size:14px}
+.callout .lbl{display:block;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:700}
+.callout.avoid{background:var(--avoid-bg);border:1px solid #e2b6b2}.callout.avoid .lbl{color:var(--avoid)}
+.callout.caution{background:var(--caution-bg);border:1px solid #e6cc9e}.callout.caution .lbl{color:var(--caution)}
+.callout ul{margin:4px 0 0 18px;padding:0}
+.tbl-wrap{overflow-x:auto;margin-bottom:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+th,td{padding:8px 11px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--bg);font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--soft)}tr:last-child td{border-bottom:none}td.hi{font-weight:600}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.f label{display:block;font-size:12px;font-family:var(--mono);color:var(--soft);margin-bottom:4px;text-transform:uppercase}
+.f input,.f select,#q{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);font-size:14.5px;font-family:var(--sans);color:var(--ink)}
+.big{font-family:var(--serif);font-size:28px;font-weight:600;margin:12px 0 2px}
+.pill{font-family:var(--mono);font-size:11.5px;padding:3px 9px;border-radius:20px;display:inline-block;margin:3px 4px 0 0;background:var(--accent-bg);color:var(--accent)}
+.pill.w{background:var(--caution-bg);color:var(--caution)}.pill.a{background:var(--avoid-bg);color:var(--avoid)}
+.note{font-size:13px;color:var(--soft);margin-top:8px}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;font-family:var(--sans)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:5px 12px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--soft);font-family:var(--sans)}
+.cls{margin-bottom:26px;scroll-margin-top:170px}
+.cls-h{border-bottom:2px solid var(--accent);padding-bottom:5px;margin-bottom:8px}
+.cls-h h3{margin:0;color:var(--accent);font-size:19px}
+.cls-info{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 15px;margin-bottom:10px;font-size:13.5px}
+.cls-info p{margin:6px 0 0}
+details.mol{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:var(--radius);margin-bottom:8px}
+details.mol summary{cursor:pointer;padding:11px 14px;font-weight:650;font-size:15px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
+details.mol summary .via{font-family:var(--mono);font-size:11.5px;color:var(--soft);font-weight:400}
+details.mol summary .now{flex:1 1 100%;font-weight:400;font-size:13.5px;background:var(--hl);border-radius:6px;padding:4px 9px}
+.mb{padding:0 14px 12px}
+.row{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;padding:7px 0;border-top:1px solid var(--line);font-size:13.5px}
+.row b{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--soft);font-weight:600;padding-top:2px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.bands{margin:0;padding:0;list-style:none}.bands li{padding:2px 7px;border-radius:5px;margin:1px 0}
+.bands li.on,.row .crrt.on{background:var(--hl);font-weight:600}.row .crrt{padding:2px 7px;border-radius:5px;display:block}
+.bands .r{font-family:var(--mono);font-size:12px;color:var(--soft);display:inline-block;min-width:92px}
+footer{max-width:1040px;margin:28px auto 0;padding:14px 20px 0;border-top:1px solid var(--line);color:var(--soft);font-size:12px}
+@media print{header.top{position:static}nav.tabs,.bar a{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+<p class="eyebrow">Riferimento clinico — Anestesia &amp; Terapia Intensiva</p>
+<h1 class="title">Terapia Antibiotica</h1>
+<div class="bar">
+  <label for="gcl">ClCr (mL/min)</label><input type="number" id="gcl" min="0" max="300" step="1" placeholder="—">
+  <label class="chk"><input type="checkbox" id="gcrrt"> Paziente in CRRT</label>
+  <span id="barmsg">Inserisci la clearance per evidenziare la fascia di dosaggio.</span>
+  <a id="gocalc">Calcola</a>
+</div>
+<nav class="tabs" id="tabs">
+  <button data-view="home" class="active">Panoramica</button>
+  <button data-view="calc">Clearance creatinina</button>
+  <button data-view="mol">Classi e molecole</button>
+  <button data-view="pkpd">PK/PD</button>
+  <button data-view="crrt">Rene e CRRT</button>
+  <button data-view="refs">Fonti</button>
+</nav>
+</div></header>
+<main>
+
+<section class="view active" id="view-home">
+  <h2>Antibatterici per classe: meccanismo, spettro, PK/PD e dosaggi</h2>
+  <p class="lead">Per ogni molecola: via di somministrazione, spettro, dose a domicilio, dose ospedaliera nei casi gravi, aggiustamento per funzione renale e dose in CRRT. Riguarda l'adulto.</p>
+  <div class="card"><p><strong>Come si usa</strong></p><ol>
+    <li>Inserisci la clearance della creatinina nella barra in alto, o calcolala nella scheda <strong>Clearance creatinina</strong>.</li>
+    <li>In <strong>Classi e molecole</strong> ogni scheda evidenzia in giallo la fascia renale corrispondente. Con «Paziente in CRRT» viene evidenziata la dose in CRRT.</li>
+    <li>Usa la ricerca per nome o germe (per esempio «MRSA», «Pseudomonas», «KPC»).</li></ol></div>
+  <div id="home-stats" class="card"></div>
+  <div class="callout avoid"><span class="lbl">Prima di prescrivere</span><ul>
+    <li>Le dosi sono indicative e vanno confrontate con il Riassunto delle Caratteristiche del Prodotto, i protocolli locali e, quando disponibile, la consulenza infettivologica.</li>
+    <li>Nel paziente critico la prima dose (dose di carico) non si riduce mai per l'insufficienza renale.</li>
+    <li>Le fasce renali valgono per una funzione renale stabile: nel danno renale acuto e in CRRT rivalutare ogni giorno.</li>
+    <li>Le dosi in CRRT dipendono dall'effluente e dalla funzione renale residua; molte derivano da studi piccoli.</li></ul></div>
+  <div class="callout caution"><span class="lbl">Limiti dell'app</span>Sono inclusi gli antibatterici di uso clinico corrente in Italia, non ogni molecola esistente; mancano antifungini, antivirali e antitubercolari. Non sono trattate età pediatrica, gravidanza, emodialisi intermittente, ECMO e obesità grave. Le dosi «a domicilio» sono quelle orali o della terapia parenterale domiciliare per infezioni lievi o moderate.</div>
+</section>
+
+<section class="view" id="view-calc">
+  <h2>Clearance della creatinina (Cockcroft-Gault)</h2>
+  <p class="lead">È la formula su cui si basano le fasce di dosaggio delle schede tecniche. Non è l'eGFR del laboratorio (CKD-EPI), che è normalizzato a 1,73 m².</p>
+  <div class="card">
+    <div class="g2">
+      <div class="f"><label for="c-age">Età (anni)</label><input type="number" id="c-age" min="18" max="110"></div>
+      <div class="f"><label for="c-sex">Sesso</label><select id="c-sex"><option value="m">Maschio</option><option value="f">Femmina</option></select></div>
+      <div class="f"><label for="c-w">Peso reale (kg)</label><input type="number" id="c-w" min="30" max="300" step="0.1"></div>
+      <div class="f"><label for="c-h">Altezza (cm)</label><input type="number" id="c-h" min="130" max="220"></div>
+      <div class="f"><label for="c-cr">Creatinina</label><input type="number" id="c-cr" min="0.1" step="0.01"></div>
+      <div class="f"><label for="c-u">Unità</label><select id="c-u"><option value="mg">mg/dL</option><option value="umol">µmol/L</option></select></div>
+      <div class="f"><label for="c-pw">Peso da usare</label><select id="c-pw"><option value="auto">Automatico</option><option value="real">Reale</option><option value="ibw">Ideale</option><option value="adj">Corretto</option></select></div>
+    </div>
+    <div id="c-out"></div>
+  </div>
+  <div class="card"><p><strong>Formula</strong></p>
+    <p>ClCr (mL/min) = (140 − età) × peso (kg) / (72 × creatinina in mg/dL), moltiplicato per 0,85 nella donna.</p>
+    <p><strong>Peso ideale</strong> (Devine): uomo 50 kg + 0,906 × (altezza in cm − 152,4); donna 45,5 kg + lo stesso termine. <strong>Peso corretto</strong>: ideale + 0,4 × (reale − ideale).</p>
+    <p><strong>Scelta automatica del peso</strong>: reale se inferiore all'ideale; ideale se tra 100% e 120% dell'ideale; corretto se superiore al 120%.</p></div>
+  <div class="callout caution"><span class="lbl">Quando la stima non è affidabile</span><ul>
+    <li>Creatinina instabile (danno renale acuto, primi giorni di sepsi): la formula sovrastima o sottostima; preferire la clearance misurata sulle urine (4-24 h).</li>
+    <li>Anziani, sarcopenia, amputazioni, cirrosi: creatinina bassa e clearance sovrastimata.</li>
+    <li>Clearance renale aumentata (oltre 130 mL/min: giovani, trauma, ustioni, sepsi iperdinamica): rischio di sottodosaggio dei farmaci idrofili.</li>
+    <li>Paziente in dialisi o CRRT: la formula non si applica.</li></ul></div>
+</section>
+
+<section class="view" id="view-mol">
+  <h2>Classi e molecole</h2>
+  <input type="search" id="q" placeholder="Cerca molecola, classe o germe…" autocomplete="off">
+  <div class="chips" id="chips"></div>
+  <div id="list"></div>
+  <p class="note" id="nores" hidden>Nessun risultato.</p>
+</section>
+
+<section class="view" id="view-pkpd">
+  <h2>Farmacocinetica e farmacodinamica</h2>
+  <p class="lead">L'indice PK/PD indica come somministrare: i tempo-dipendenti chiedono esposizione prolungata, i concentrazione-dipendenti picchi alti e intervalli lunghi.</p>
+  <div class="tbl-wrap"><table><thead><tr><th>Tipo di attività</th><th>Indice</th><th>Classi</th><th>Strategia</th></tr></thead><tbody>
+    <tr><td class="hi">Tempo-dipendente</td><td>fT&gt;MIC</td><td>Penicilline, cefalosporine, carbapenemi, monobattami</td><td>Dosi frazionate, infusione estesa o continua dopo dose di carico</td></tr>
+    <tr><td class="hi">Concentrazione-dipendente</td><td>Cmax/MIC</td><td>Aminoglicosidi, daptomicina, metronidazolo</td><td>Dose alta in monosomministrazione giornaliera</td></tr>
+    <tr><td class="hi">Dipendente dall'esposizione totale</td><td>AUC/MIC</td><td>Vancomicina, teicoplanina, fluorochinoloni, linezolid, tetracicline e tigeciclina, azitromicina, colistina, daptomicina</td><td>Ottimizzare la dose giornaliera totale; monitoraggio dei livelli quando disponibile</td></tr>
+  </tbody></table></div>
+  <h3>Riepilogo per classe</h3>
+  <div class="tbl-wrap"><table><thead><tr><th>Classe</th><th>Attività</th><th>Indice PK/PD</th><th>Effetto</th><th>Solubilità</th><th>Eliminazione</th></tr></thead><tbody id="pk-body"></tbody></table></div>
+  <div class="card"><p><strong>Idrofili e lipofili nel paziente critico</strong></p><ul>
+    <li><strong>Idrofili</strong> (beta-lattamici, aminoglicosidi, glicopeptidi, daptomicina, colistina, fosfomicina): volume di distribuzione piccolo che aumenta con sepsi, fluidi ed edemi; eliminazione renale. Servono dosi di carico piene; risentono di insufficienza renale, clearance aumentata e CRRT.</li>
+    <li><strong>Lipofili</strong> (fluorochinoloni, macrolidi, linezolid, tigeciclina, clindamicina, rifampicina, metronidazolo): ampio volume di distribuzione, poco influenzato dai fluidi; eliminazione spesso epatica. Buona penetrazione intracellulare e tissutale.</li>
+    <li><strong>Ipoalbuminemia</strong>: aumenta la quota libera e la clearance dei farmaci molto legati (ceftriaxone, ertapenem, teicoplanina, daptomicina, oxacillina).</li></ul></div>
+  <div class="card"><p><strong>Monitoraggio delle concentrazioni (TDM)</strong></p><ul>
+    <li>Vancomicina: AUC 400-600 mg·h/L (infusione continua 20-25 mg/L).</li>
+    <li>Aminoglicosidi: picco/MIC ≥8-10; valle gentamicina e tobramicina &lt;1 mg/L, amikacina &lt;2,5-5 mg/L.</li>
+    <li>Teicoplanina: valle &gt;15-20 mg/L (&gt;30 mg/L nell'endocardite).</li>
+    <li>Beta-lattamici nel critico: concentrazione libera sopra la MIC per il 100% dell'intervallo (target 1-4×MIC); utile soprattutto in CRRT, clearance aumentata e germi con MIC elevata.</li>
+    <li>Linezolid: valle 2-7 mg/L (oltre aumenta la trombocitopenia).</li></ul></div>
+</section>
+
+<section class="view" id="view-crrt">
+  <h2>Insufficienza renale e CRRT</h2>
+  <div class="card"><p><strong>Insufficienza renale</strong></p><ul>
+    <li>La dose di carico dipende dal volume di distribuzione, non dalla clearance: non va ridotta.</li>
+    <li>Tempo-dipendenti: di norma si riduce la dose mantenendo l'intervallo. Concentrazione-dipendenti: si mantiene la dose e si allunga l'intervallo.</li>
+    <li>Nelle prime 24-48 h di sepsi con danno renale acuto molti centri mantengono la dose piena dei beta-lattamici: la funzione renale spesso recupera e il rischio maggiore è il sottodosaggio.</li>
+    <li>Rivalutare ogni giorno funzione renale e diuresi.</li></ul></div>
+  <div class="card"><p><strong>CRRT: principi</strong></p><ul>
+    <li>Le dosi riportate assumono un effluente di circa 1-2 L/h (20-25 mL/kg/h) e funzione renale residua trascurabile. Con effluenti più alti (3-4 L/h) servono dosi maggiori o intervalli più brevi.</li>
+    <li>La CRRT rimuove i farmaci idrofili, con basso legame proteico e piccolo volume di distribuzione. Farmaci lipofili o molto legati alle proteine sono poco rimossi.</li>
+    <li>Clearance extracorporea ≈ effluente × coefficiente di sieving (≈ frazione libera). In post-diluizione la rimozione è massima; la prediluizione la riduce.</li>
+    <li>Se resta diuresi, la clearance totale è la somma di quella residua e di quella extracorporea.</li>
+    <li>Interruzioni del trattamento (coagulazione del filtro, procedure): il farmaco si accumula; dosare come nel paziente anurico finché la CRRT non riparte.</li>
+    <li>Membrane adsorbenti (per esempio oXiris, AN69) possono legare alcuni farmaci, come aminoglicosidi, vancomicina e colistina.</li>
+    <li>Emodialisi intermittente e trattamenti prolungati intermittenti (SLED/PIRRT) richiedono schemi diversi: non sono coperti qui.</li>
+    <li>Usare il TDM ogni volta che è disponibile.</li></ul></div>
+  <div class="card"><p><strong>Nessun aggiustamento in CRRT</strong></p><p>Azitromicina, ceftriaxone, clindamicina, doxiciclina, linezolid, metronidazolo, oxacillina, rifampicina, tigeciclina (elenco UNMC 2023); anche moxifloxacina.</p></div>
+  <div class="callout caution"><span class="lbl">Sigla [UNMC]</span>Indica le dosi tratte dalla tabella CVVHD della Nebraska Medicine/UNMC (gennaio 2023), che distingue per flusso di dialisato. Dove la sigla manca, la dose proviene da altre fonti citate o è segnalata come «dati limitati».</div>
+</section>
+
+<section class="view" id="view-refs">
+  <h2>Fonti</h2>
+  <div class="tbl-wrap"><table><tbody>
+    <tr><td>Nebraska Medicine / UNMC Antimicrobial Stewardship Program. Renal Dose Adjustment Guidelines for Antimicrobials: CRRT and PIRRT Dosing Recommendations. Gennaio 2023. <em>Fonte delle dosi in CRRT contrassegnate [UNMC].</em></td></tr>
+    <tr><td>Hoff BM, Maker JH, Dager WE, Heintz BH. Antibiotic dosing for critically ill adult patients receiving intermittent hemodialysis, prolonged intermittent renal replacement therapy, and continuous renal replacement therapy: an update. Ann Pharmacother. 2020;54:43-55.</td></tr>
+    <tr><td>Heintz BH, Matzke GR, Dager WE. Antimicrobial dosing concepts and recommendations for critically ill adult patients receiving continuous renal replacement therapy or intermittent hemodialysis. Pharmacotherapy. 2009;29:562-577.</td></tr>
+    <tr><td>Li L, Li X, Xia Y, et al. Recommendation of antimicrobial dosing optimization during continuous renal replacement therapy. Front Pharmacol. 2020;11:786.</td></tr>
+    <tr><td>Pistolesi V, Morabito S, Di Mario F, et al. A guide to understanding antimicrobial drug dosing in critically ill patients on renal replacement therapy. Antimicrob Agents Chemother. 2019;63:e00583-19.</td></tr>
+    <tr><td>Rybak MJ, Le J, Lodise TP, et al. Therapeutic monitoring of vancomycin for serious methicillin-resistant Staphylococcus aureus infections: a revised consensus guideline. Am J Health Syst Pharm. 2020;77:835-864.</td></tr>
+    <tr><td>Abdul-Aziz MH, Alffenaar JC, Bassetti M, et al. Antimicrobial therapeutic drug monitoring in critically ill adult patients: a position paper. Intensive Care Med. 2020;46:1127-1153.</td></tr>
+    <tr><td>Tsuji BT, Pogue JM, Zavascki AP, et al. International consensus guidelines for the optimal use of the polymyxins. Pharmacotherapy. 2019;39:10-39.</td></tr>
+    <tr><td>Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16:31-41.</td></tr>
+    <tr><td>Nebraska Medicine / UNMC. Antimicrobial Renal Dosage Adjustment Guidelines for Adults. <em>Confronto di dosi standard e fasce renali.</em></td></tr>
+    <tr><td>Schede tecniche consultate (medicines.org.uk, salvo diversa indicazione): Emblaveo, Zevtera, Colomycin, Vaborem, Targocid, Fomicyt, Monuril, Quofenix, Xerava, Tenkasi, Xydalba, Zinacef, Suprax, Avelox, Rifadin, cefotaxime, cefazolina, flucloxacillina, eritromicina; Recarbrio (scheda statunitense); cefditoren e cefpodoxima (AEMPS, Spagna). <em>Sono schede britanniche, statunitensi o spagnole: il RCP italiano (AIFA) può differire in qualche dettaglio.</em></td></tr>
+  </tbody></table></div>
+  <div class="callout avoid"><span class="lbl">Stato della verifica</span>Ogni scheda riporta il proprio stato. <strong>Verificato</strong>: dose standard e fasce renali confrontate con la tabella renale UNMC o con la scheda tecnica indicata. <strong>Verifica parziale</strong>: le fonti differiscono o coprono solo una parte. <strong>Non verificato</strong>: valori redatti a memoria, da controllare sul RCP. Le dosi in CRRT sono verificate solo dove compare la sigla [UNMC] o il riferimento al RCP. I riferimenti bibliografici sono in forma sintetica.</div>
+</section>
+</main>
+<footer>Strumento di consultazione per uso professionale. Non sostituisce il giudizio clinico, il RCP né i protocolli locali.</footer>
+<script>
+/* ===== DATI ===== */
+const FULL="Dose piena";
+function m(n,via,sp,dom,osp,ren,crrt,note){return {n:n,via:via,sp:sp,dom:dom,osp:osp,ren:ren,crrt:crrt,note:note||""};}
+const NOADJ="Nessun aggiustamento";
+const CLASSES=[
+{id:"pen",n:"Penicilline",mech:"Legano le PBP (penicillin-binding proteins) e bloccano la transpeptidazione del peptidoglicano: inibizione della sintesi della parete, con lisi batterica. Gli inibitori (clavulanato, sulbactam, tazobactam) proteggono dalla idrolisi di molte beta-lattamasi.",
+ kill:"Tempo-dipendente",idx:"fT>MIC (obiettivo 50% dell'intervallo; 100% e 4×MIC nel paziente critico)",act:"Battericida",sol:"Idrofile",elim:"Renale (oxacillina: epatica/biliare)",
+ note:"Emivita breve: nei casi gravi dose di carico seguita da infusione estesa (3-4 h) o continua. Effetto post-antibiotico minimo sui Gram-negativi.",
+ m:[
+ m("Benzilpenicillina (penicillina G)","EV","Streptococchi, pneumococco sensibile, meningococco, Treponema pallidum, Clostridium e anaerobi orali, Actinomyces. Non attiva su stafilococchi produttori di penicillinasi.","Non disponibile per via orale in Italia.","12-24 MU/die in 4-6 dosi (3-4 MU ogni 4 h); meningite ed endocardite 18-24 MU/die.",[[50,999,FULL],[10,50,"75% della dose (es. 2-3 MU ogni 4-6 h)"],[0,10,"20-50% della dose (es. 2-4 MU ogni 8 h)"]],"2-4 MU ogni 4-6 h (fonti storiche, dati limitati).","Neurotossicità e convulsioni ad alte dosi in insufficienza renale. Carico di sodio o potassio secondo il sale."),
+ m("Benzatin-benzilpenicillina","IM","Streptococcus pyogenes, Treponema pallidum.","1,2 MU IM in dose singola (faringite streptococcica; profilassi della malattia reumatica ogni 3-4 settimane). Sifilide precoce: 2,4 MU IM singola; tardiva: 2,4 MU a settimana per 3 settimane.","—",NOADJ,"Non applicabile.","Solo IM profonda. Concentrazioni basse e prolungate: non usare per infezioni gravi o neurosifilide."),
+ m("Amoxicillina","OS","Streptococchi, pneumococco, Enterococcus faecalis, Listeria, H. influenzae non produttore di beta-lattamasi, H. pylori.","500 mg-1 g ogni 8 h (polmonite di comunità: 1 g ogni 8 h).","Per via EV usare ampicillina.",[[30,999,FULL],[10,30,"500 mg ogni 12 h"],[0,10,"500 mg ogni 24 h"]],"Non applicabile (orale): usare ampicillina EV.","Buona biodisponibilità orale. Rash in corso di mononucleosi."),
+ m("Ampicillina","EV","Come amoxicillina: streptococchi, Enterococcus faecalis, Listeria monocytogenes.","—","1-2 g ogni 4-6 h. Meningite, endocardite, Listeria: 2 g ogni 4 h (12 g/die).",[[50,999,FULL],[30,50,"2 g ogni 8 h (schema ogni 4 h: 2 g ogni 6 h)"],[15,30,"2 g ogni 12 h (schema ogni 4 h: 2 g ogni 8 h)"],[0,15,"2 g ogni 24 h (schema ogni 4 h: 2 g ogni 12 h)"]],"2 g ogni 8 h (ogni 6 h con effluente 3-4 L/h) [UNMC].","Soluzione poco stabile: preparare al momento."),
+ m("Oxacillina","EV","Staphylococcus aureus e stafilococchi coagulasi-negativi meticillino-sensibili; streptococchi.","—","2 g ogni 4 h (12 g/die), anche in infusione continua.",NOADJ,"Nessun aggiustamento [UNMC].","Farmaco di scelta per MSSA. Epatotossicità, flebiti, nefrite interstiziale."),
+ m("Flucloxacillina","OS / EV","Come oxacillina (MSSA, streptococchi).","500 mg-1 g ogni 6-8 h, a stomaco vuoto.","250 mg-1 g ogni 6 h, raddoppiabili (fino a 2 g ogni 6 h); osteomielite ed endocardite fino a 8 g/die in 3-4 dosi (RCP). Le linee guida per l'endocardite arrivano a 12 g/die.",[[10,999,FULL],[0,10,"Considerare riduzione della dose o allungamento dell'intervallo"]],"Nessun aggiustamento (dati limitati; non rimossa dalla dialisi).","Colestasi anche tardiva. Con paracetamolo ad alte dosi: rischio di acidosi da 5-oxoprolina."),
+ m("Amoxicillina/acido clavulanico","OS / EV","Come amoxicillina, più MSSA, anaerobi, H. influenzae e Moraxella produttori di beta-lattamasi, Enterobacterales sensibili. Non ESBL affidabilmente, non Pseudomonas.","875/125 mg ogni 8-12 h.","2 g/200 mg EV ogni 8 h (fino a ogni 6 h).",[[30,999,FULL],[10,30,"Os: 500/125 mg ogni 12 h. EV: 1 g/200 mg, poi 500/100 mg ogni 12 h"],[0,10,"Os: 500/125 mg ogni 24 h. EV: 1 g/200 mg, poi 500/100 mg ogni 24 h"]],"Dati limitati: EV 1 g/200 mg ogni 8-12 h (non verificato su linee guida CRRT).","Epatite colestatica (clavulanato). Le formulazioni 875/125 mg e 2 g/200 mg non sono indicate con ClCr <30."),
+ m("Ampicillina/sulbactam","EV","Come amoxicillina/clavulanato; il sulbactam è attivo su Acinetobacter baumannii.","—","3 g (2+1) ogni 6 h. Acinetobacter resistente: sulbactam 9 g/die, cioè 9 g (6+3) ogni 8 h in infusione di 4 h.",[[30,999,FULL],[15,30,"1,5-3 g ogni 12 h"],[0,15,"1,5-3 g ogni 24 h"]],"Carico 3 g, poi 3 g ogni 8 h (ogni 6 h con effluente 3-4 L/h) [UNMC].",""),
+ m("Piperacillina/tazobactam","EV","Enterobacterales, Pseudomonas aeruginosa, anaerobi, Enterococcus faecalis, MSSA. Non affidabile su ESBL nelle infezioni gravi; non attiva su MRSA.","—","4,5 g ogni 6 h. Infusione estesa: carico 4,5 g in 30 min, poi 4,5 g ogni 6-8 h in 4 h; oppure continua 18 g/die dopo carico.",[[40,999,FULL],[20,40,"4,5 g ogni 8 h (RCP); UNMC: 70% della dose ogni 8 h in infusione estesa"],[0,20,"4,5 g ogni 12 h"]],"4,5 g ogni 8 h in infusione estesa [UNMC]. Il tazobactam può accumularsi: cautela con intervalli inferiori a 8 h se non c'è funzione renale residua.","Nefrotossicità in associazione con vancomicina. Trombocitopenia, carico di sodio.")
+ ]},
+{id:"cef",n:"Cefalosporine",mech:"Come le penicilline: legame alle PBP e inibizione della sintesi del peptidoglicano. Le generazioni successive ampliano lo spettro sui Gram-negativi; ceftarolina e ceftobiprolo legano anche la PBP2a (MRSA). Il cefiderocol entra nella cellula sfruttando i sistemi di trasporto del ferro (sideroforo).",
+ kill:"Tempo-dipendente",idx:"fT>MIC (60-70%; 100% nel paziente critico)",act:"Battericida",sol:"Idrofile",elim:"Renale (ceftriaxone: renale e biliare)",
+ note:"Nessuna cefalosporina è attiva sugli enterococchi (parziale eccezione: ceftobiprolo su E. faecalis) né su Listeria. Neurotossicità (encefalopatia, mioclono, stato non convulsivo) con cefepime e ceftazidime in insufficienza renale.",
+ m:[
+ m("Cefazolina (I gen.)","EV","MSSA, streptococchi, E. coli, Klebsiella e Proteus sensibili. Profilassi chirurgica.","—","2 g ogni 8 h (batteriemia/endocardite da MSSA: 2 g ogni 6-8 h).",[[55,999,FULL],[35,55,"Dose piena ogni 8 h"],[11,35,"Metà dose ogni 12 h (es. 1 g ogni 12 h)"],[0,11,"Metà dose ogni 18-24 h (es. 1 g ogni 24 h)"]],"Carico 2 g, poi 2 g ogni 12 h (ogni 8 h con effluente 3-4 L/h) [UNMC].","Alternativa a oxacillina per MSSA; scarsa penetrazione nel liquor."),
+ m("Cefalexina (I gen.)","OS","MSSA, streptococchi, E. coli sensibile (cistite).","500 mg-1 g ogni 6-8 h.","—",[[30,999,FULL],[15,30,"500 mg ogni 8 h o 1 g ogni 12 h"],[0,15,"500 mg ogni 12 h o 1 g ogni 24 h"]],"Non applicabile (orale).",""),
+ m("Cefuroxima (II gen.)","OS / EV","Streptococchi, pneumococco, H. influenzae, Moraxella, Enterobacterales sensibili.","Cefuroxima axetil 250-500 mg ogni 12 h.","750 mg-1,5 g ogni 8 h.",[[20,999,FULL],[10,20,"EV 750 mg ogni 12 h (RCP). Os: 250 mg ogni 12 h"],[0,10,"EV 750 mg ogni 24 h (RCP). Os: 250 mg ogni 24 h"]],"750 mg ogni 12 h in emofiltrazione continua o ad alto flusso (RCP).",""),
+ m("Cefoxitina (II gen., cefamicina)","EV","Enterobacterales sensibili, anaerobi (resistenze crescenti in Bacteroides fragilis). Profilassi in chirurgia colorettale.","—","1-2 g ogni 6-8 h.",[[50,999,FULL],[30,50,"2 g ogni 8 h"],[10,30,"2 g ogni 12 h"],[0,10,"1 g ogni 24 h"]],"2 g ogni 12 h (ogni 8 h con effluente 3-4 L/h) [UNMC].","Induttore di AmpC."),
+ m("Cefaclor (II gen.)","OS","Streptococchi, H. influenzae, Moraxella.","250-500 mg ogni 8 h.","—","Nessun aggiustamento sostanziale; cautela con ClCr <10.","Non applicabile (orale).","Reazioni tipo malattia da siero."),
+ m("Ceftriaxone (III gen.)","EV / IM","Streptococchi, pneumococco, Enterobacterales non ESBL/AmpC, Neisseria, H. influenzae, Borrelia. Non Pseudomonas, non enterococchi, non Listeria.","1-2 g IM o EV ogni 24 h (terapia parenterale domiciliare).","2 g ogni 24 h; meningite ed endocardite: 2 g ogni 12 h.","Nessun aggiustamento (max 2 g/die se insufficienza renale ed epatica gravi coesistono).","Nessun aggiustamento [UNMC].","Legame proteico elevato. Pseudolitiasi biliare; non miscelare con soluzioni contenenti calcio."),
+ m("Cefotaxime (III gen.)","EV","Come ceftriaxone.","—","1-2 g ogni 12 h; infezioni gravi 2-3 g ogni 6-8 h (fino a 12 g/die). Meningite: 2 g ogni 4-6 h (linee guida, non RCP).",[[21,999,FULL],[6,21,"Metà della dose di mantenimento"],[0,6,"1 g/die in 2 dosi"]],"1-2 g ogni 8-12 h (Heintz 2009).",""),
+ m("Ceftazidime (III gen.)","EV","Gram-negativi incluso Pseudomonas aeruginosa. Scarsa attività sui Gram-positivi.","—","2 g ogni 8 h (anche in infusione estesa o continua 6 g/die dopo carico).",[[50,999,FULL],[31,50,"1 g ogni 12 h (RCP); infezioni gravi 2 g ogni 12 h (UNMC)"],[16,31,"1 g ogni 24 h (RCP); infezioni gravi 2 g ogni 24 h (UNMC)"],[6,16,"500 mg ogni 24 h (RCP); infezioni gravi 1 g ogni 24 h (UNMC)"],[0,6,"500 mg ogni 48 h (RCP); UNMC: 1 g ogni 24 h"]],"Carico 2 g, poi 1 g ogni 8 h o 2 g ogni 12 h (2 g ogni 8 h con effluente 3-4 L/h) [UNMC].","Neurotossicità in insufficienza renale."),
+ m("Cefixima (III gen.)","OS","Enterobacterales sensibili, H. influenzae, streptococchi. Scarsa su stafilococchi.","400 mg ogni 24 h (o 200 mg ogni 12 h).","—",[[20,999,FULL],[0,20,"200 mg ogni 24 h"]],"Non applicabile (orale).","Biodisponibilità orale modesta (circa 50%)."),
+ m("Cefpodoxima proxetil (III gen.)","OS","Streptococchi, pneumococco, H. influenzae, Enterobacterales sensibili.","200 mg ogni 12 h, con il cibo.","—",[[40,999,FULL],[10,40,"200 mg ogni 24 h"],[0,10,"200 mg ogni 48 h"]],"Non applicabile (orale).",""),
+ m("Cefditoren pivoxil (III gen.)","OS","Pneumococco, streptococchi, H. influenzae, MSSA.","200-400 mg ogni 12 h, con il cibo.","—",[[50,999,FULL],[30,50,"Max 200 mg ogni 12 h"],[0,30,"200 mg ogni 24 h"]],"Non applicabile (orale).","Il pivalato riduce la carnitina: evitare trattamenti prolungati."),
+ m("Cefepime (IV gen.)","EV","Enterobacterales (stabile su AmpC), Pseudomonas aeruginosa, MSSA, streptococchi.","—","2 g ogni 8 h (infezioni gravi, Pseudomonas, neutropenia febbrile); 1-2 g ogni 12 h nelle forme meno gravi. Infusione estesa 3-4 h.",[[60,999,FULL],[30,60,"2 g ogni 12 h"],[11,30,"2 g ogni 24 h"],[0,11,"1 g ogni 24 h"]],"Carico 2 g, poi 1 g ogni 6 h o 2 g ogni 12 h (2 g ogni 8 h con effluente 3-4 L/h) [UNMC].","Neurotossicità dose-dipendente, soprattutto in insufficienza renale: valutare il TDM."),
+ m("Ceftarolina fosamil (V gen.)","EV","MRSA, MSSA, pneumococco anche resistente, Enterobacterales non ESBL. Non Pseudomonas.","—","600 mg ogni 12 h in 60 min; ogni 8 h in 2 h per S. aureus con MIC 2-4 mg/L o infezioni gravi.",[[50,999,FULL],[31,50,"400 mg ogni 12 h"],[15,31,"300 mg ogni 12 h"],[0,15,"200 mg ogni 12 h"]],"400 mg ogni 12 h (ogni 8 h in endocardite o batteriemia da S. aureus) [UNMC].","Neutropenia nei trattamenti oltre 2-3 settimane."),
+ m("Ceftobiprolo medocaril (V gen.)","EV","MRSA, MSSA, pneumococco, Enterococcus faecalis, Enterobacterales non ESBL, Pseudomonas sensibile.","—","500 mg ogni 8 h in infusione di 2 h (4 h se ClCr >150).",[[50,999,FULL],[30,50,"500 mg ogni 12 h"],[10,30,"250 mg ogni 12 h"],[0,10,"In emodialisi: 250 mg ogni 24 h, dopo la seduta"]],"Dati insufficienti: il RCP non dà indicazioni.","Disgeusia, iponatriemia."),
+ m("Ceftolozano/tazobactam","EV","Pseudomonas aeruginosa anche multiresistente, Enterobacterales incluse molte ESBL. Non carbapenemasi.","—","1,5 g ogni 8 h (addominali e urinarie); 3 g ogni 8 h nella polmonite nosocomiale. Infusione di 1 h (estesa a 3 h nei casi gravi).",[[50,999,FULL],[30,50,"750 mg ogni 8 h (polmonite: 1,5 g ogni 8 h)"],[15,30,"375 mg ogni 8 h (polmonite: 750 mg ogni 8 h)"],[0,15,"Solo se in emodialisi: carico 750 mg, poi 150 mg ogni 8 h (polmonite: carico 2,25 g, poi 450 mg ogni 8 h)"]],"Carico 1,5 g, poi 750 mg ogni 8 h; polmonite o Pseudomonas multiresistente: 1,5 g ogni 8 h [UNMC].",""),
+ m("Ceftazidime/avibactam","EV","Enterobacterales produttrici di KPC e OXA-48, ESBL, AmpC; Pseudomonas aeruginosa. Non metallo-beta-lattamasi (in quel caso associare aztreonam).","—","2,5 g (2+0,5) ogni 8 h in infusione di 2 h.",[[50,999,FULL],[31,50,"1,25 g ogni 8 h"],[16,31,"0,94 g ogni 12 h"],[6,16,"0,94 g ogni 24 h"],[0,6,"0,94 g ogni 48 h"]],"1,25 g ogni 8 h; MIC elevata o infezione profonda: 2,5 g ogni 8 h [UNMC].","Nel danno renale acuto in rapido recupero rivalutare ogni giorno per evitare sottodosaggio."),
+ m("Cefiderocol","EV","Gram-negativi resistenti ai carbapenemi: Enterobacterales (incluse metallo-beta-lattamasi), Pseudomonas, Acinetobacter, Stenotrophomonas. Non Gram-positivi né anaerobi.","—","2 g ogni 8 h in infusione di 3 h.",[[120,999,"2 g ogni 6 h (clearance renale aumentata)"],[60,120,"2 g ogni 8 h"],[30,60,"1,5 g ogni 8 h"],[15,30,"1 g ogni 8 h"],[0,15,"0,75 g ogni 12 h"]],"Secondo l'effluente: 1 L/h 1,5 g ogni 12 h; 2 L/h 2 g ogni 12 h; 3-4 L/h 1,5 g ogni 8 h; oltre 4 L/h 2 g ogni 8 h [UNMC].","Infusione sempre di 3 h.")
+ ]},
+{id:"carb",n:"Carbapenemi",mech:"Legame ad alta affinità a più PBP con inibizione della sintesi della parete; stabili alla maggior parte delle beta-lattamasi (ESBL, AmpC). Vaborbactam e relebactam inibiscono le carbapenemasi di classe A (KPC).",
+ kill:"Tempo-dipendente",idx:"fT>MIC (40%; 100% nel paziente critico)",act:"Battericida",sol:"Idrofili",elim:"Renale",
+ note:"Hanno effetto post-antibiotico anche sui Gram-negativi. Riducono in modo marcato i livelli di acido valproico: associazione da evitare. Non attivi su MRSA, Enterococcus faecium, Stenotrophomonas.",
+ m:[
+ m("Meropenem","EV","Enterobacterales incluse ESBL e AmpC, Pseudomonas, Acinetobacter sensibile, anaerobi, streptococchi, MSSA.","—","1 g ogni 8 h; meningite e patogeni con MIC elevata: 2 g ogni 8 h. Infusione estesa di 3 h (stabilità limitata per l'infusione continua).",[[50,999,FULL],[26,50,"Stessa dose ogni 12 h"],[10,26,"Metà dose ogni 12 h"],[0,10,"Metà dose ogni 24 h"]],"Carico 1 g, poi 500 mg ogni 6 h (altre fonti: 1 g ogni 8 h); meningite o MIC elevata: 2 g ogni 8 h [UNMC].","Minor rischio convulsivo rispetto a imipenem."),
+ m("Imipenem/cilastatina","EV","Come meropenem; più attivo su Enterococcus faecalis, meno su alcuni Gram-negativi.","—","500 mg ogni 6 h o 1 g ogni 8 h.",[[90,999,FULL],[60,90,"400-500 mg ogni 6 h"],[30,60,"300 mg ogni 6 h o 500 mg ogni 8 h"],[15,30,"200 mg ogni 6 h o 500 mg ogni 12 h"],[0,15,"Non usare, salvo emodialisi"]],"Carico 1 g, poi 500 mg ogni 8 h (ogni 6 h con effluente 3-4 L/h) [UNMC].","Convulsioni, soprattutto in insufficienza renale o con lesioni del sistema nervoso centrale."),
+ m("Ertapenem","EV / IM","Enterobacterales incluse ESBL, anaerobi, streptococchi, MSSA. Non Pseudomonas, non Acinetobacter, non enterococchi.","1 g EV o IM ogni 24 h (terapia parenterale domiciliare).","1 g ogni 24 h.",[[30,999,FULL],[0,30,"500 mg ogni 24 h"]],"1 g ogni 24 h [UNMC].","Legame proteico elevato: sottodosaggio possibile con ipoalbuminemia. Neurotossicità in insufficienza renale."),
+ m("Meropenem/vaborbactam","EV","Enterobacterales produttrici di KPC, ESBL, AmpC. Non OXA-48 né metallo-beta-lattamasi.","—","4 g (2+2) ogni 8 h in infusione di 3 h.",[[40,999,FULL],[20,40,"2 g (1+1) ogni 8 h"],[10,20,"2 g (1+1) ogni 12 h"],[0,10,"1 g (0,5+0,5) ogni 12 h"]],"2 g (1+1) ogni 8 h; dati limitati [UNMC].",""),
+ m("Imipenem/cilastatina/relebactam","EV","Enterobacterales KPC, Pseudomonas aeruginosa resistente a imipenem. Non metallo-beta-lattamasi né OXA-48.","—","1,25 g (500/500/250 mg) ogni 6 h in 30 min.",[[90,999,FULL],[60,90,"1 g ogni 6 h"],[30,60,"750 mg ogni 6 h"],[15,30,"500 mg ogni 6 h"],[0,15,"Non usare, salvo emodialisi avviata entro 48 h"]],"Dati limitati (ex vivo): 500 mg ogni 6 h [UNMC]. Consultare lo specialista.","In emodialisi somministrare dopo la seduta.")
+ ]},
+{id:"mono",n:"Monobattami",mech:"L'aztreonam lega selettivamente la PBP3 dei Gram-negativi aerobi. È stabile alle metallo-beta-lattamasi ma idrolizzato da ESBL, AmpC e KPC: l'avibactam lo protegge da queste ultime.",
+ kill:"Tempo-dipendente",idx:"fT>MIC",act:"Battericida",sol:"Idrofili",elim:"Renale",
+ note:"Nessuna attività su Gram-positivi e anaerobi. Bassa allergenicità crociata con le penicilline (attenzione con la ceftazidime, che ha la stessa catena laterale).",
+ m:[
+ m("Aztreonam","EV","Enterobacterales, Pseudomonas aeruginosa. Con ceftazidime/avibactam per le metallo-beta-lattamasi.","—","2 g ogni 6-8 h.",[[30,999,FULL],[10,30,"Carico 1-2 g, poi 50% della dose (1 g ogni 8 h, oppure 2 g ogni 12 h)"],[0,10,"Carico 1-2 g, poi 25% della dose (500 mg ogni 8 h, oppure 2 g ogni 24 h)"]],"Carico 2 g, poi 2 g ogni 8 h (ogni 6 h con effluente 3-4 L/h) [UNMC].",""),
+ m("Aztreonam/avibactam","EV","Enterobacterales produttrici di metallo-beta-lattamasi (NDM, VIM), KPC, OXA-48; Stenotrophomonas.","—","Carico 2 g/0,67 g, poi 1,5 g/0,5 g ogni 6 h in infusione di 3 h.",[[50,999,FULL],[31,50,"Carico 2 g/0,67 g, poi 0,75 g/0,25 g ogni 6 h"],[16,31,"Carico 1,35 g/0,45 g, poi 0,675 g/0,225 g ogni 8 h"],[0,16,"Carico 1 g/0,33 g, poi 0,675 g/0,225 g ogni 12 h (solo se in emodialisi)"]],"Dati insufficienti per una dose: il RCP indica che in CRRT serve una dose più alta che in emodialisi, da adattare alla clearance extracorporea.","Con ClCr ≤15 non usare se non è avviata una terapia sostitutiva renale. In emodialisi somministrare dopo la seduta.")
+ ]},
+{id:"glico",n:"Glicopeptidi e lipoglicopeptidi",mech:"Legano il terminale D-Ala-D-Ala dei precursori del peptidoglicano e ne impediscono la polimerizzazione. I lipoglicopeptidi (dalbavancina, oritavancina) si ancorano anche alla membrana, con emivita molto lunga.",
+ kill:"Tempo-dipendente con effetto persistente",idx:"AUC/MIC (vancomicina: AUC 400-600 mg·h/L)",act:"Battericida lenta",sol:"Idrofili",elim:"Renale",
+ note:"Attivi solo sui Gram-positivi. Monitoraggio delle concentrazioni (TDM) indispensabile per vancomicina e raccomandato per teicoplanina.",
+ m:[
+ m("Vancomicina","EV (OS solo per C. difficile)","MRSA, stafilococchi coagulasi-negativi, enterococchi sensibili, pneumococco resistente, Clostridioides difficile (solo per os).","Orale, non assorbita: 125 mg ogni 6 h per 10 giorni nell'infezione da C. difficile (500 mg ogni 6 h nelle forme fulminanti).","Carico 25-30 mg/kg (peso reale), poi 15-20 mg/kg ogni 8-12 h, oppure infusione continua dopo il carico. Obiettivo AUC 400-600 mg·h/L (infusione continua: 20-25 mg/L).",[[50,999,"15-20 mg/kg ogni 8-12 h, secondo TDM"],[20,50,"15 mg/kg ogni 24 h, secondo TDM"],[0,20,"Carico pieno, poi ridosare in base ai livelli"]],"Carico 20-25 mg/kg, poi 7,5-10 mg/kg ogni 12 h oppure 15-20 mg/kg ogni 24 h, secondo TDM [UNMC].","Nefrotossicità (maggiore con piperacillina/tazobactam), reazione da infusione rapida, ototossicità. La dose di carico non va ridotta in insufficienza renale."),
+ m("Teicoplanina","EV / IM","Come vancomicina (alcuni stafilococchi coagulasi-negativi sono meno sensibili).","6 mg/kg ogni 24 h IM o EV dopo il carico (terapia parenterale domiciliare).","Carico 6 mg/kg ogni 12 h per 3 dosi (12 mg/kg ogni 12 h per 3-5 dosi in endocardite e infezioni osteoarticolari), poi 6 mg/kg ogni 24 h (cute, polmonite, vie urinarie) o 12 mg/kg ogni 24 h (osteoarticolari, endocardite). Valle >15 mg/L; >20 nelle osteoarticolari; >30 nell'endocardite.",[[80,999,FULL],[30,80,"Dal quarto giorno: metà dose ogni 24 h, o dose piena ogni 48 h"],[0,30,"Dal quarto giorno: un terzo della dose ogni 24 h, o dose piena ogni 72 h"]],"Il RCP non dà indicazioni: carico standard pieno, poi mantenimento guidato dal TDM (dati limitati).","Nessun aggiustamento nei primi tre giorni. Non rimossa dall'emodialisi (in emodialisi: un terzo della dose). Legame proteico elevato."),
+ m("Dalbavancina","EV","MRSA, MSSA, streptococchi, enterococchi sensibili alla vancomicina.","1500 mg in dose singola (oppure 1000 mg, poi 500 mg dopo 7 giorni), in ambulatorio o day hospital.","Come a lato; schemi ripetuti nelle infezioni osteoarticolari (uso esperto).",[[30,999,FULL],[0,30,"Non in dialisi: 1000 mg in dose singola (RCP europeo; la scheda statunitense indica 1125 mg), oppure 750 mg, poi 375 mg dopo 7 giorni. In emodialisi regolare: dose piena"]],"Dati insufficienti.","Emivita circa 14 giorni."),
+ m("Oritavancina","EV","MRSA, MSSA, streptococchi, enterococchi anche VanA.","1200 mg in dose singola, infusione di 3 h.","Come a lato.","Nessun aggiustamento nell'insufficienza lieve o moderata; dati molto limitati in quella grave (cautela).","Dati insufficienti (non rimossa dall'emodialisi).","Allunga falsamente aPTT (fino a 120 h), PT/INR (12 h) e ACT (24 h). Eparina non frazionata controindicata per 120 h. Diluire solo in glucosata 5%.")
+ ]},
+{id:"lipo",n:"Lipopeptidi",mech:"La daptomicina si inserisce nella membrana citoplasmatica dei Gram-positivi in presenza di calcio, provoca depolarizzazione ed efflusso di potassio e arresta le sintesi cellulari.",
+ kill:"Concentrazione-dipendente",idx:"AUC/MIC e Cmax/MIC",act:"Battericida rapida",sol:"Idrofila",elim:"Renale",
+ note:"Inattivata dal surfattante polmonare: non usare nella polmonite.",
+ m:[
+ m("Daptomicina","EV","MRSA, MSSA, stafilococchi coagulasi-negativi, enterococchi inclusi VRE (dosi alte).","6-10 mg/kg ogni 24 h in terapia parenterale domiciliare.","Cute e tessuti molli 4-6 mg/kg ogni 24 h; batteriemia ed endocardite 8-12 mg/kg ogni 24 h (dosi oltre scheda tecnica, raccomandate dalle linee guida).",[[30,999,FULL],[0,30,"Stessa dose ogni 48 h"]],"6-8 mg/kg ogni 24 h: lo schema ogni 48 h espone a sottodosaggio [UNMC].","Miopatia: dosare CPK ogni settimana; valutare sospensione delle statine. Polmonite eosinofila.")
+ ]},
+{id:"oxa",n:"Oxazolidinoni",mech:"Legano la subunità 50S (rRNA 23S) e impediscono la formazione del complesso di inizio 70S: blocco della sintesi proteica nella fase iniziale.",
+ kill:"Tempo-dipendente con effetto persistente",idx:"AUC/MIC (e T>MIC)",act:"Batteriostatici (battericidi sugli streptococchi)",sol:"Moderatamente lipofili",elim:"Metabolismo non renale; metaboliti renali",
+ note:"Biodisponibilità orale circa 100%: passaggio EV-os senza cambio di dose. Ottima penetrazione in polmone, cute e sistema nervoso centrale.",
+ m:[
+ m("Linezolid","OS / EV","MRSA, VRE, pneumococco resistente, stafilococchi coagulasi-negativi; micobatteri, Nocardia.","600 mg ogni 12 h.","600 mg ogni 12 h.","Nessun aggiustamento; con ClCr <30 i metaboliti si accumulano e aumenta il rischio di trombocitopenia (valutare TDM).","Nessun aggiustamento [UNMC].","Mielosoppressione (emocromo settimanale), neuropatia e acidosi lattica nei trattamenti lunghi, sindrome serotoninergica con SSRI/IMAO."),
+ m("Tedizolid","OS / EV","Come linezolid.","200 mg ogni 24 h.","200 mg ogni 24 h.",NOADJ,"Nessun aggiustamento (dati limitati).","Minore mielotossicità riportata nei trattamenti brevi.")
+ ]},
+{id:"amg",n:"Aminoglicosidi",mech:"Legano in modo irreversibile la subunità 30S: errori di lettura dell'mRNA e blocco della sintesi proteica. L'ingresso nella cellula richiede ossigeno: inattivi sugli anaerobi e in ambiente acido.",
+ kill:"Concentrazione-dipendente",idx:"Cmax/MIC ≥8-10 (e AUC/MIC)",act:"Battericida rapida",sol:"Idrofili",elim:"Renale (filtrazione glomerulare)",
+ note:"Effetto post-antibiotico prolungato: monosomministrazione giornaliera. Nel paziente critico il volume di distribuzione aumenta: non ridurre la prima dose. Nefrotossicità e ototossicità legate alla durata e alla concentrazione di valle. Dosare sul peso ideale (corretto nell'obeso).",
+ m:[
+ m("Gentamicina","EV / IM","Enterobacterales, Pseudomonas (meno di tobramicina e amikacina); sinergia con beta-lattamici su enterococchi e streptococchi.","—","5-7 mg/kg ogni 24 h. Sinergia sui Gram-positivi: 3 mg/kg/die in 1-3 dosi. Valle <1 mg/L.",[[60,999,"5-7 mg/kg ogni 24 h"],[40,60,"5-7 mg/kg ogni 36 h"],[20,40,"5-7 mg/kg ogni 48 h"],[0,20,"Dose singola piena, poi ridosare in base ai livelli"]],"Dose di carico piena, poi ridosare secondo TDM (spesso ogni 24-48 h) [UNMC].","Potenzia il blocco neuromuscolare."),
+ m("Amikacina","EV / IM","Come gentamicina, con attività conservata su molti ceppi resistenti; micobatteri.","—","15-20 mg/kg ogni 24 h (25-30 mg/kg nello shock settico secondo alcune linee guida). Valle <2,5-5 mg/L.",[[60,999,"15-20 mg/kg ogni 24 h"],[40,60,"15 mg/kg ogni 36 h"],[20,40,"15 mg/kg ogni 48 h"],[0,20,"Dose singola piena, poi ridosare in base ai livelli"]],"Carico 15-25 mg/kg, poi ridosare secondo TDM (spesso ogni 24-48 h) [UNMC].",""),
+ m("Tobramicina","EV / IM / inalatoria","Come gentamicina; più attiva su Pseudomonas aeruginosa.","—","5-7 mg/kg ogni 24 h. Valle <1 mg/L.",[[60,999,"5-7 mg/kg ogni 24 h"],[40,60,"5-7 mg/kg ogni 36 h"],[20,40,"5-7 mg/kg ogni 48 h"],[0,20,"Dose singola piena, poi ridosare in base ai livelli"]],"Dose di carico piena, poi ridosare secondo TDM [UNMC].","")
+ ]},
+{id:"fq",n:"Fluorochinoloni",mech:"Inibiscono la DNA girasi e la topoisomerasi IV, bloccando replicazione e trascrizione del DNA batterico.",
+ kill:"Concentrazione-dipendente",idx:"AUC/MIC (≥125 Gram-negativi, ≥30-40 pneumococco) e Cmax/MIC ≥10",act:"Battericida",sol:"Lipofili",elim:"Renale (ciprofloxacina, levofloxacina); epatica (moxifloxacina)",
+ note:"Biodisponibilità orale elevata. Avvertenze EMA/AIFA: tendinopatie e rotture tendinee, neuropatie, effetti neuropsichiatrici, aneurisma e dissezione aortica, allungamento del QT, disglicemie. Da riservare ai casi senza alternative. Chelati da cationi (Ca, Mg, Fe, Al, Zn).",
+ m:[
+ m("Ciprofloxacina","OS / EV","Enterobacterales, Pseudomonas aeruginosa (il più attivo dei chinoloni). Scarsa su pneumococco e anaerobi.","500-750 mg ogni 12 h.","400 mg EV ogni 8-12 h (ogni 8 h per Pseudomonas e infezioni gravi).",[[60,999,FULL],[30,60,"Os 250-500 mg ogni 12 h; EV 200-400 mg ogni 12 h"],[0,30,"Os 250-500 mg ogni 24 h; EV 200-400 mg ogni 24 h"]],"200-400 mg EV ogni 12 h (Heintz 2009).","Inibisce il CYP1A2 (teofillina, tizanidina)."),
+ m("Levofloxacina","OS / EV","Pneumococco, atipici (Legionella), Enterobacterales, Pseudomonas (meno di ciprofloxacina).","500-750 mg ogni 24 h.","750 mg ogni 24 h o 500 mg ogni 12 h.",[[50,999,FULL],[20,50,"Carico 500-750 mg, poi 250 mg ogni 24 h (o 750 mg ogni 48 h)"],[10,20,"Carico 500-750 mg, poi 125 mg ogni 24 h (o 500 mg ogni 48 h)"],[0,10,"Carico 500 mg, poi 125 mg ogni 24 h"]],"Carico 750 mg, poi 500-750 mg ogni 24 h nelle infezioni sistemiche [UNMC].",""),
+ m("Moxifloxacina","OS / EV","Pneumococco, atipici, anaerobi; micobatteri. Non Pseudomonas; non per le vie urinarie.","400 mg ogni 24 h.","400 mg ogni 24 h.",NOADJ,"Nessun aggiustamento.","Maggior allungamento del QT; epatotossicità."),
+ m("Delafloxacina","OS / EV","MRSA, Gram-positivi, Enterobacterales, Pseudomonas sensibile, anaerobi.","450 mg ogni 12 h.","300 mg EV ogni 12 h.",[[30,999,FULL],[0,30,"EV 200 mg ogni 12 h, oppure 450 mg per os ogni 12 h. Malattia renale terminale: non raccomandata"]],"Dati insufficienti.","")
+ ]},
+{id:"mac",n:"Macrolidi",mech:"Legano la subunità 50S (rRNA 23S) e bloccano la traslocazione e l'uscita del peptide nascente: inibizione della sintesi proteica.",
+ kill:"Tempo-dipendente (azitromicina: effetto persistente)",idx:"AUC/MIC (azitromicina); T>MIC (eritromicina, claritromicina)",act:"Batteriostatici",sol:"Lipofili",elim:"Epatica/biliare",
+ note:"Concentrazioni intracellulari e tissutali elevate: attivi su patogeni intracellulari (Legionella, Mycoplasma, Chlamydia). Allungano il QT. Claritromicina ed eritromicina inibiscono fortemente il CYP3A4; l'azitromicina molto meno. Effetto immunomodulante.",
+ m:[
+ m("Azitromicina","OS / EV","Atipici, streptococchi e pneumococco (resistenze frequenti in Italia), H. influenzae, Campylobacter, Chlamydia trachomatis, micobatteri non tubercolari.","500 mg ogni 24 h per 3 giorni.","500 mg EV ogni 24 h.",NOADJ,"Nessun aggiustamento [UNMC].","Emivita tissutale molto lunga."),
+ m("Claritromicina","OS / EV","Come azitromicina; H. pylori, micobatteri non tubercolari.","500 mg ogni 12 h.","500 mg EV ogni 12 h.",[[30,999,FULL],[0,30,"Metà dose (250 mg ogni 12 h o 500 mg ogni 24 h)"]],"Dati limitati: 500 mg ogni 12-24 h.","Numerose interazioni (statine, anticoagulanti diretti, colchicina, tacrolimus)."),
+ m("Eritromicina","OS / EV","Atipici, streptococchi; procinetico a basse dosi.","500 mg ogni 6 h.","25 mg/kg/die nelle forme lievi o moderate, 50 mg/kg/die in quelle gravi (max 4 g/die), in infusione continua o in dosi ogni 6 h.","Il RCP non indica aggiustamenti.","Nessun aggiustamento.","Intolleranza gastrointestinale; flebiti.")
+ ]},
+{id:"linc",n:"Lincosamidi",mech:"La clindamicina lega la subunità 50S e inibisce la sintesi proteica; riduce la produzione di tossine (stafilococciche e streptococciche).",
+ kill:"Tempo-dipendente",idx:"AUC/MIC (e T>MIC)",act:"Batteriostatica",sol:"Lipofila",elim:"Epatica",
+ note:"Buona penetrazione in osso e ascessi; non passa nel liquor. Associata al più alto rischio di infezione da Clostridioides difficile. Verificare la resistenza inducibile (D-test) negli stafilococchi resistenti all'eritromicina.",
+ m:[
+ m("Clindamicina","OS / EV","Stafilococchi (anche MRSA comunitario se sensibile), streptococchi, anaerobi sopra il diaframma; effetto anti-tossina in fascite necrotizzante e shock tossico.","300-450 mg ogni 6-8 h.","600-900 mg EV ogni 8 h (900 mg ogni 8 h nelle infezioni necrotizzanti).",NOADJ,"Nessun aggiustamento [UNMC].","Ridurre nell'insufficienza epatica grave.")
+ ]},
+{id:"tet",n:"Tetracicline e glicilcicline",mech:"Legano la subunità 30S e impediscono l'attacco dell'aminoacil-tRNA al sito A. Tigeciclina ed eravaciclina superano i meccanismi di efflusso e di protezione ribosomiale.",
+ kill:"Tempo-dipendente con effetto persistente",idx:"AUC/MIC",act:"Batteriostatiche",sol:"Lipofile",elim:"Biliare/fecale (doxiciclina, tigeciclina, eravaciclina)",
+ note:"Ampio volume di distribuzione con basse concentrazioni plasmatiche: tigeciclina ed eravaciclina poco adatte alle batteriemie in monoterapia. Non attive su Pseudomonas. Controindicate in gravidanza e sotto gli 8 anni; fotosensibilità; chelate da cationi.",
+ m:[
+ m("Doxiciclina","OS","Atipici, Rickettsia, Borrelia, Brucella, MRSA comunitario, pneumococco sensibile, Chlamydia.","100 mg ogni 12 h (carico 200 mg).","100 mg ogni 12 h.",NOADJ,"Nessun aggiustamento [UNMC].","Esofagite: assumere con abbondante acqua, non a letto."),
+ m("Minociclina","OS","Come doxiciclina; Acinetobacter, Stenotrophomonas, Nocardia.","100 mg ogni 12 h (carico 200 mg).","100 mg ogni 12 h (formulazione EV non disponibile in Italia).",NOADJ,"Nessun aggiustamento.","Vertigini, iperpigmentazione, reazioni autoimmuni."),
+ m("Tigeciclina","EV","MRSA, VRE, Enterobacterales incluse ESBL e molte produttrici di carbapenemasi, Acinetobacter, anaerobi. Non Pseudomonas, Proteus, Providencia.","—","Carico 100 mg, poi 50 mg ogni 12 h. Germi multiresistenti: carico 200 mg, poi 100 mg ogni 12 h (dosi oltre scheda tecnica).",NOADJ,"Nessun aggiustamento [UNMC].","Child-Pugh C: carico 100 mg, poi 25 mg ogni 12 h. Nausea e vomito, pancreatite, ipofibrinogenemia. Avvertenza per aumento di mortalità rispetto ai comparatori."),
+ m("Eravaciclina","EV","Come tigeciclina (infezioni intra-addominali complicate).","—","1 mg/kg ogni 12 h in infusione di 60 min.",NOADJ,"Nessun aggiustamento atteso (anche in emodialisi non serve; dati limitati in CRRT).","Child-Pugh C: esposizione aumentata, il RCP non dà una posologia. Con forti induttori del CYP3A4: 1,5 mg/kg ogni 12 h. Mai in bolo.")
+ ]},
+{id:"poli",n:"Polimixine",mech:"Detergenti cationici: legano il lipide A del lipopolisaccaride e disgregano la membrana esterna e citoplasmatica dei Gram-negativi.",
+ kill:"Concentrazione-dipendente",idx:"fAUC/MIC",act:"Battericida",sol:"Idrofile",elim:"Renale (colistimetato profarmaco)",
+ note:"Indice terapeutico stretto. Il colistimetato sodico (CMS) è un profarmaco convertito lentamente in colistina: la dose di carico è indispensabile. 1 MU di CMS equivale a circa 33 mg di colistina base (CBA) e a 80 mg di CMS.",
+ m:[
+ m("Colistina (colistimetato sodico)","EV / inalatoria","Acinetobacter, Pseudomonas, Enterobacterales resistenti ai carbapenemi. Non Proteus, Serratia, Providencia, Morganella, Burkholderia, Gram-positivi.","—","Carico 9 MU, poi 9 MU/die in 2-3 dosi (es. 4,5 MU ogni 12 h).",[[50,999,"9 MU/die in 2 dosi"],[30,50,"5,5-7,5 MU/die in 2 dosi"],[10,30,"4,5-5,5 MU/die in 2 dosi"],[0,10,"3,5 MU/die in 2 dosi"]],"Carico 9 MU, poi dose come a funzione renale normale: 9 MU/die in 3 dosi (RCP; concorde con UNMC). Il consenso internazionale 2019 suggerisce dosi più alte. Il RCP avverte che i dati sono molto limitati.","Nefrotossicità (fino al 30-50%) e neurotossicità. Il carico va sempre somministrato pieno, anche in insufficienza renale.")
+ ]},
+{id:"sulfa",n:"Sulfamidici e antifolati",mech:"Sulfametoxazolo e trimetoprim bloccano due tappe successive della sintesi dei folati (diidropteroato sintetasi e diidrofolato reduttasi), con effetto sinergico.",
+ kill:"Concentrazione-dipendente (dati limitati)",idx:"AUC/MIC",act:"Battericida in associazione",sol:"Lipofili",elim:"Renale ed epatica",
+ note:"Biodisponibilità orale circa 100%. Le dosi si esprimono come trimetoprim (TMP). Una fiala o compressa forte contiene 160 mg di TMP e 800 mg di sulfametoxazolo.",
+ m:[
+ m("Cotrimoxazolo (trimetoprim/sulfametoxazolo)","OS / EV","MRSA, Stenotrophomonas maltophilia, Pneumocystis jirovecii, Nocardia, Listeria, Enterobacterales sensibili. Non Pseudomonas, non enterococchi; scarso su streptococco di gruppo A.","160/800 mg ogni 12 h.","Infezioni gravi: 8-10 mg/kg/die di TMP in 2-4 dosi. Pneumocystis, Stenotrophomonas, Nocardia: 15-20 mg/kg/die di TMP in 3-4 dosi.",[[30,999,FULL],[15,30,"50% della dose"],[0,15,"Evitare, o 25-50% della dose con monitoraggio"]],"Gram-negativi: 10 mg/kg/die di TMP in 2 dosi; Stenotrophomonas 10-15 mg/kg/die; Pneumocystis 15 mg/kg/die in 3 dosi [UNMC].","Iperkaliemia, aumento della creatinina senza calo del filtrato, mielosoppressione, reazioni cutanee gravi. Potenzia warfarin e metotrexato.")
+ ]},
+{id:"nitro",n:"Nitroimidazoli",mech:"Profarmaco ridotto dai batteri anaerobi in radicali che danneggiano il DNA.",
+ kill:"Concentrazione-dipendente",idx:"AUC/MIC e Cmax/MIC",act:"Battericida",sol:"Lipofilo",elim:"Epatica (metaboliti renali)",
+ note:"Biodisponibilità orale circa 100%; ottima penetrazione in ascessi e sistema nervoso centrale.",
+ m:[
+ m("Metronidazolo","OS / EV","Anaerobi (Bacteroides, Clostridium), Clostridioides difficile (forme lievi, seconda scelta), protozoi (Giardia, Entamoeba, Trichomonas), H. pylori.","500 mg ogni 8 h.","500 mg EV ogni 8 h (alcuni centri: ogni 12 h per gli anaerobi).",NOADJ,"Nessun aggiustamento [UNMC].","Ridurre nell'insufficienza epatica grave. Neuropatia periferica ed encefalopatia nei trattamenti prolungati; effetto disulfiram-simile con alcol.")
+ ]},
+{id:"rif",n:"Rifamicine",mech:"Inibiscono la RNA polimerasi DNA-dipendente batterica, bloccando la trascrizione.",
+ kill:"Concentrazione-dipendente",idx:"AUC/MIC e Cmax/MIC",act:"Battericida",sol:"Lipofile",elim:"Epatica/biliare",
+ note:"Mai in monoterapia (resistenza rapida). Attive sul biofilm: usate nelle infezioni di protesi e materiale impiantato. La rifampicina è un potente induttore di CYP3A4 e glicoproteina P: controllare sempre le interazioni (anticoagulanti, immunosoppressori, antiepilettici, antiretrovirali).",
+ m:[
+ m("Rifampicina","OS / EV","Stafilococchi (in associazione), micobatteri, Brucella; profilassi meningococcica.","600 mg ogni 24 h, oppure 300-450 mg ogni 12 h nelle infezioni stafilococciche su protesi.","600 mg ogni 24 h; infezioni stafilococciche gravi, brucellosi, legionellosi: 600-1200 mg/die in 2-4 dosi.","Nessun aggiustamento fino a 600 mg/die; cautela a dosi superiori.","Nessun aggiustamento [UNMC].","Epatotossicità (in insufficienza epatica non superare 8 mg/kg/die), colorazione arancione dei liquidi biologici."),
+ m("Rifaximina","OS","Azione intestinale: non assorbita. Diarrea del viaggiatore, encefalopatia epatica.","200 mg ogni 6-8 h; encefalopatia epatica 550 mg ogni 12 h.","—",NOADJ,"Non applicabile.","Non per infezioni sistemiche.")
+ ]},
+{id:"altri",n:"Altri antibatterici",mech:"Meccanismi diversi: la fosfomicina inibisce MurA (prima tappa della sintesi del peptidoglicano); la nitrofurantoina genera intermedi reattivi che danneggiano più bersagli; la fidaxomicina inibisce la RNA polimerasi di C. difficile; il cloramfenicolo lega la subunità 50S.",
+ kill:"Variabile secondo la molecola",idx:"Fosfomicina: fAUC/MIC e T>MIC",act:"Fosfomicina e fidaxomicina battericide; cloramfenicolo batteriostatico",sol:"Fosfomicina idrofila",elim:"Fosfomicina e nitrofurantoina: renale",
+ note:"",
+ m:[
+ m("Fosfomicina disodica","EV","Enterobacterales incluse ESBL e alcune produttrici di carbapenemasi, MRSA, enterococchi, Pseudomonas (variabile). Sempre in associazione nelle infezioni gravi.","—","12-24 g/die in 2-3 dosi (meningite: 16-24 g/die in 3-4 dosi). Dose singola massima 8 g; cautela oltre 16 g/die.",[[40,999,"Dose piena (cautela alle dosi più alte tra 40 e 80)"],[30,40,"60-70% della dose giornaliera in 2-3 dosi (RCP: 70% a ClCr 40, 60% a ClCr 30)"],[20,30,"40-60% in 2-3 dosi (RCP: 40% a ClCr 20)"],[10,20,"20-40% (RCP: 20% a ClCr 10, in 1-2 dosi)"],[0,10,"Non oltre il 20% in 1-2 dosi; in emodialisi 2 g a fine seduta"]],"Emofiltrazione veno-venosa continua in post-diluizione: nessun aggiustamento (RCP).","In insufficienza renale la prima dose va raddoppiata (carico), senza superare 8 g. Ogni grammo apporta circa 0,32 g di sodio (14 mmol): ipernatriemia, sovraccarico di volume; ipokaliemia."),
+ m("Fosfomicina trometamolo","OS","E. coli ed Enterococcus faecalis nella cistite acuta non complicata della donna.","3 g in dose singola, a stomaco vuoto, preferibilmente la sera dopo aver svuotato la vescica.","—",[[10,999,FULL],[0,10,"Non raccomandata"]],"Non applicabile.","Solo per cistite: concentrazioni sistemiche insufficienti."),
+ m("Nitrofurantoina","OS","E. coli, Enterococcus, Staphylococcus saprophyticus nella cistite. Non Proteus né Pseudomonas.","50-100 mg ogni 6 h per 5 giorni, con il cibo.","—",[[45,999,FULL],[30,45,"Solo cicli brevi se non ci sono alternative"],[0,30,"Controindicata"]],"Non applicabile.","Tossicità polmonare ed epatica nei trattamenti prolungati; neuropatia in insufficienza renale. Controindicata nel deficit di G6PD."),
+ m("Fidaxomicina","OS","Clostridioides difficile (minore tasso di recidive rispetto a vancomicina).","200 mg ogni 12 h per 10 giorni.","200 mg ogni 12 h.",NOADJ,"Nessun aggiustamento (non assorbita).",""),
+ m("Cloramfenicolo","EV","Ampio spettro; riserva per meningite in allergia grave ai beta-lattamici, rickettsiosi.","—","12,5-25 mg/kg ogni 6 h (max 4 g/die).",NOADJ,"Nessun aggiustamento.","Mielosoppressione dose-dipendente e anemia aplastica idiosincrasica. Ridurre nell'insufficienza epatica.")
+ ]}
+];
+
+const VER={"Amoxicillina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Amoxicillina/acido clavulanico": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ampicillina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ampicillina/sulbactam": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Oxacillina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Piperacillina/tazobactam": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Benzilpenicillina (penicillina G)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Cefalexina (I gen.)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Cefoxitina (II gen., cefamicina)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ceftriaxone (III gen.)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ceftazidime (III gen.)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Cefepime (IV gen.)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ceftarolina fosamil (V gen.)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ceftolozano/tazobactam": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ceftazidime/avibactam": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Cefiderocol": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Meropenem": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Imipenem/cilastatina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ertapenem": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Aztreonam": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Vancomicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Daptomicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Linezolid": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Tedizolid": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Ciprofloxacina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Levofloxacina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Azitromicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Claritromicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Clindamicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Doxiciclina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Minociclina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Tigeciclina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Cotrimoxazolo (trimetoprim/sulfametoxazolo)": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Metronidazolo": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Nitrofurantoina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Fidaxomicina": ["v", "Dose e fasce renali confrontate con la tabella renale UNMC"], "Aztreonam/avibactam": ["v", "Dose e fasce renali confrontate con il RCP (Emblaveo)"], "Ceftobiprolo medocaril (V gen.)": ["v", "Dose e fasce renali confrontate con il RCP (Zevtera)"], "Imipenem/cilastatina/relebactam": ["v", "Dose e fasce renali confrontate con la scheda tecnica statunitense (Recarbrio)"], "Colistina (colistimetato sodico)": ["v", "Dose, fasce renali e CRRT confrontate con il RCP (Colomycin)"], "Gentamicina": ["p", "Dose confermata; per l'insufficienza renale le fonti usano schemi diversi (qui: allungamento dell'intervallo). Guidare sempre con i livelli"], "Amikacina": ["p", "Dose confermata; per l'insufficienza renale le fonti usano schemi diversi (qui: allungamento dell'intervallo). Guidare sempre con i livelli"], "Tobramicina": ["p", "Dose confermata; per l'insufficienza renale le fonti usano schemi diversi (qui: allungamento dell'intervallo). Guidare sempre con i livelli"], "Dalbavancina": ["v", "Dose e fasce renali confrontate con il RCP (Xydalba)"], "Cefuroxima (II gen.)": ["v", "Dose EV, fasce renali ed emofiltrazione confrontate con il RCP (Zinacef); la tabella UNMC usa dosi ridotte più alte (1,5 g)"], "Cefpodoxima proxetil (III gen.)": ["v", "Dose e fasce renali confrontate con la scheda tecnica spagnola (AEMPS); la tabella UNMC usa la sola soglia 30"], "Cefazolina (I gen.)": ["v", "Dose e fasce renali confrontate con il RCP (cefazolina 2 g)"], "Meropenem/vaborbactam": ["v", "Dose e fasce renali confrontate con il RCP (Vaborem)"], "Teicoplanina": ["v", "Dose e fasce renali confrontate con il RCP (Targocid)"], "Fosfomicina disodica": ["v", "Dose, fasce renali e CRRT confrontate con il RCP (Fomicyt); valori corretti rispetto alla prima versione"], "Fosfomicina trometamolo": ["v", "Dose e fasce renali confrontate con il RCP (Monuril)"], "Cefotaxime (III gen.)": ["v", "Dose e fasce renali confrontate con il RCP; la dose per la meningite viene dalle linee guida"], "Flucloxacillina": ["v", "Dose EV e funzione renale confrontate con il RCP; dose orale non riverificata"], "Delafloxacina": ["v", "Dose e fasce renali confrontate con il RCP (Quofenix)"], "Eravaciclina": ["v", "Dose e fasce renali confrontate con il RCP (Xerava)"], "Oritavancina": ["v", "Dose e fasce renali confrontate con il RCP (Tenkasi)"], "Cefixima (III gen.)": ["v", "Dose e fasce renali confrontate con il RCP (Suprax)"], "Moxifloxacina": ["v", "Dose e fasce renali confrontate con il RCP (Avelox)"], "Rifampicina": ["v", "Dose e fasce renali confrontate con il RCP (Rifadin)"], "Eritromicina": ["v", "Dose EV confrontata con il RCP; dose orale non riverificata"], "Cefditoren pivoxil (III gen.)": ["v", "Dose e fasce renali confrontate con la scheda tecnica spagnola (AEMPS)"]};
+/* ===== MOTORE ===== */
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+let CL=null,CRRT=false;
+function bandIdx(ren,cl){if(!Array.isArray(ren)||cl===null)return -1;for(let i=0;i<ren.length;i++){if(cl>=ren[i][0]&&cl<ren[i][1])return i;}return -1;}
+function rangeTxt(b){if(b[1]>=999)return "≥"+b[0];if(b[0]===0)return "<"+b[1];return b[0]+"-"+(b[1]-1);}
+function nowTxt(x){
+  if(CRRT)return "In CRRT: "+x.crrt;
+  if(CL===null)return "";
+  if(!Array.isArray(x.ren))return "ClCr "+CL+": "+x.ren;
+  const i=bandIdx(x.ren,CL);return i<0?"":"ClCr "+CL+": "+x.ren[i][2];
+}
+function molHTML(x,open){
+  const i=CRRT?-1:bandIdx(x.ren,CL),nt=nowTxt(x);
+  let ren;
+  if(Array.isArray(x.ren))ren='<ul class="bands">'+x.ren.map(function(b,k){return '<li'+(k===i?' class="on"':'')+'><span class="r">ClCr '+rangeTxt(b)+'</span> '+esc(b[2])+'</li>';}).join("")+'</ul>';
+  else ren='<span'+(CL!==null&&!CRRT?' class="crrt on"':'')+'>'+esc(x.ren)+'</span>';
+  return '<details class="mol"'+(open?' open':'')+'><summary><span>'+esc(x.n)+'</span><span class="via">'+esc(x.via)+'</span>'+(nt?'<span class="now">'+esc(nt)+'</span>':'')+'</summary><div class="mb">'+
+   '<div class="row"><b>Spettro</b><div>'+esc(x.sp)+'</div></div>'+
+   '<div class="row"><b>A domicilio</b><div>'+esc(x.dom)+'</div></div>'+
+   '<div class="row"><b>Ospedale, casi gravi</b><div>'+esc(x.osp)+'</div></div>'+
+   '<div class="row"><b>Funzione renale</b><div>'+ren+'</div></div>'+
+   '<div class="row"><b>CRRT</b><div><span class="crrt'+(CRRT?' on':'')+'">'+esc(x.crrt)+'</span></div></div>'+
+   (x.note?'<div class="row"><b>Note</b><div>'+esc(x.note)+'</div></div>':'')+
+   '<div class="row"><b>Verifica</b><div>'+verHTML(x.n)+'</div></div></div></details>';
+}
+function verHTML(n){const v=VER[n];if(!v)return '<span class="pill a">Non verificato</span> Dose e fasce redatte a memoria: controllare sul RCP.';return '<span class="pill'+(v[0]==="v"?'':' w')+'">'+(v[0]==="v"?'Verificato':'Verifica parziale')+'</span> '+esc(v[1])+'.';}
+function render(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const openSet={};document.querySelectorAll("details.mol[open] summary span:first-child").forEach(function(s){openSet[s.textContent]=1;});
+  let h="",tot=0;
+  CLASSES.forEach(function(c){
+    const ms=c.m.filter(function(x){return !q||(x.n+" "+c.n+" "+x.sp+" "+x.note).toLowerCase().indexOf(q)>=0;});
+    if(!ms.length)return;tot+=ms.length;
+    h+='<div class="cls" id="cls-'+c.id+'"><div class="cls-h"><h3>'+esc(c.n)+'</h3></div><div class="cls-info">'+
+      '<span class="pill">'+esc(c.kill)+'</span><span class="pill">'+esc(c.act)+'</span><span class="pill w">'+esc(c.sol)+'</span><span class="pill w">Eliminazione: '+esc(c.elim)+'</span>'+
+      '<p><strong>Meccanismo d\'azione.</strong> '+esc(c.mech)+'</p><p><strong>Indice PK/PD.</strong> '+esc(c.idx)+'</p>'+(c.note?'<p><strong>Caratteristiche.</strong> '+esc(c.note)+'</p>':'')+'</div>'+
+      ms.map(function(x){return molHTML(x,!!openSet[x.n]);}).join("")+'</div>';
+  });
+  document.getElementById("list").innerHTML=h;document.getElementById("nores").hidden=tot>0;
+}
+function setCL(v,fromCalc){
+  CL=(v===""||v===null||isNaN(v))?null:Math.max(0,Math.round(Number(v)));
+  const g=document.getElementById("gcl");if(fromCalc)g.value=CL===null?"":CL;
+  barMsg();render();
+}
+function barMsg(){
+  const m=document.getElementById("barmsg");
+  if(CRRT)m.textContent="Evidenziate le dosi in CRRT (le fasce di ClCr non si applicano).";
+  else if(CL===null)m.textContent="Inserisci la clearance per evidenziare la fascia di dosaggio.";
+  else m.textContent="Fasce evidenziate per ClCr "+CL+" mL/min"+(CL>130?" (clearance aumentata: rischio di sottodosaggio).":".");
+}
+document.getElementById("gcl").addEventListener("input",function(e){setCL(e.target.value===""?null:parseFloat(e.target.value),false);});
+document.getElementById("gcrrt").addEventListener("change",function(e){CRRT=e.target.checked;barMsg();render();});
+document.getElementById("q").addEventListener("input",render);
+
+/* ----- Cockcroft-Gault ----- */
+function cg(){
+  const age=parseFloat(document.getElementById("c-age").value),sex=document.getElementById("c-sex").value,w=parseFloat(document.getElementById("c-w").value),
+   hgt=parseFloat(document.getElementById("c-h").value),u=document.getElementById("c-u").value,pw=document.getElementById("c-pw").value;
+  let cr=parseFloat(document.getElementById("c-cr").value);const out=document.getElementById("c-out");
+  if(!(age>=18&&w>0&&cr>0)){out.innerHTML='<p class="note">Inserisci età (≥18 anni), peso e creatinina. L\'altezza serve per il peso ideale e corretto.</p>';return null;}
+  if(u==="umol")cr=cr/88.4;
+  const f=sex==="f"?0.85:1;
+  let ibw=null,adj=null;
+  if(hgt>0){ibw=(sex==="f"?45.5:50)+0.906*(hgt-152.4);if(ibw<30)ibw=30;adj=ibw+0.4*(w-ibw);}
+  const calc=function(k){return (140-age)*k/(72*cr)*f;};
+  let used="real",kg=w;
+  if(pw==="auto"){if(ibw===null){used="real";}else if(w<ibw){used="real";}else if(w<=1.2*ibw){used="ibw";kg=ibw;}else{used="adj";kg=adj;}}
+  else if(pw==="ibw"&&ibw!==null){used="ibw";kg=ibw;}else if(pw==="adj"&&adj!==null){used="adj";kg=adj;}
+  const names={real:"peso reale",ibw:"peso ideale",adj:"peso corretto"};
+  const v=calc(kg);
+  let h='<div class="big">'+v.toFixed(0)+' mL/min</div><span class="pill">Calcolata con '+names[used]+' ('+kg.toFixed(1)+' kg)</span>';
+  if(v>130)h+='<span class="pill w">Clearance aumentata</span>';if(v<30)h+='<span class="pill a">Insufficienza renale grave</span>';
+  h+='<div class="tbl-wrap" style="margin-top:12px"><table style="min-width:0"><thead><tr><th>Peso</th><th>kg</th><th>ClCr (mL/min)</th></tr></thead><tbody>'+
+   '<tr><td>Reale</td><td>'+w.toFixed(1)+'</td><td>'+calc(w).toFixed(0)+'</td></tr>'+
+   (ibw!==null?'<tr><td>Ideale</td><td>'+ibw.toFixed(1)+'</td><td>'+calc(ibw).toFixed(0)+'</td></tr><tr><td>Corretto</td><td>'+adj.toFixed(1)+'</td><td>'+calc(adj).toFixed(0)+'</td></tr>':'')+'</tbody></table></div>'+
+   (ibw===null&&pw!=="real"?'<p class="note">Senza altezza si usa il peso reale.</p>':'')+
+   '<button class="btn" id="c-apply" type="button">Applica alle schede dei farmaci</button>';
+  out.innerHTML=h;
+  document.getElementById("c-apply").addEventListener("click",function(){setCL(v,true);showView("mol");});
+  return v;
+}
+["c-age","c-sex","c-w","c-h","c-cr","c-u","c-pw"].forEach(function(id){document.getElementById(id).addEventListener("input",cg);});
+
+/* ----- tab e avvio ----- */
+const tabs=document.querySelectorAll("nav.tabs button");
+function showView(n){tabs.forEach(function(b){b.classList.toggle("active",b.dataset.view===n);});document.querySelectorAll("section.view").forEach(function(v){v.classList.remove("active");});document.getElementById("view-"+n).classList.add("active");window.scrollTo(0,0);}
+tabs.forEach(function(b){b.addEventListener("click",function(){showView(b.dataset.view);});});
+document.getElementById("gocalc").addEventListener("click",function(){showView("calc");});
+document.getElementById("chips").innerHTML=CLASSES.map(function(c){return '<button type="button" class="chip" data-c="'+c.id+'">'+esc(c.n)+'</button>';}).join("");
+document.getElementById("chips").addEventListener("click",function(e){const b=e.target.closest("[data-c]");if(!b)return;const el=document.getElementById("cls-"+b.getAttribute("data-c"));if(el)el.scrollIntoView({block:"start"});});
+document.getElementById("pk-body").innerHTML=CLASSES.map(function(c){return '<tr><td class="hi">'+esc(c.n)+'</td><td>'+esc(c.kill)+'</td><td>'+esc(c.idx)+'</td><td>'+esc(c.act)+'</td><td>'+esc(c.sol)+'</td><td>'+esc(c.elim)+'</td></tr>';}).join("");
+(function(){let n=0;CLASSES.forEach(function(c){n+=c.m.length;});let nv=0,np=0;Object.keys(VER).forEach(function(k){if(VER[k][0]==="v")nv++;else np++;});document.getElementById("home-stats").innerHTML='<p><strong>Contenuto</strong>: '+CLASSES.length+' classi e '+n+' molecole. Stato di verifica delle dosi: '+nv+' verificate, '+np+' parziali, '+(n-nv-np)+' non verificate (indicato in ogni scheda).</p><p>'+CLASSES.map(function(c){return esc(c.n)+' ('+c.m.length+')';}).join(" · ")+'</p>';})();
+cg();render();
+</script>
+</body>
+</html>
